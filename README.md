@@ -1,70 +1,67 @@
-# Getting Started with Create React App
+# Next.js Portfolio Template
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+_Estimated reading time: 3 minutes_
 
-## Available Scripts
+Multi-themed portfolio that will greatly increase your chances of getting attention from recruiters.
 
-In the project directory, you can run:
+## Features
 
-### `yarn start`
+- 🎁 Modern stack – Template created using the latest features of React and Next.js
+- 🏷 TypeScript support – Project is written in TypeScript to improve the DX
+- 🚀 Fast – Buttery smooth experience thanks to the implementation of best practices and dynamic rendering, resulting in PERFECT Google Lighthouse scores
+- 💻 Responsive – Highly responsive and reusable UI components
+- 🤖 Animated - You'll find page transitions, progress bars and suttle but smooth animations across the project
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Prerequisities
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+You’ll need to have Node 10.16.0 or later version on your local development machine (but it’s not required on the server). I recommend using the latest LTS version.
 
-### `yarn test`
+## Step 1: Setup
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Install the dependancies for this project.
 
-### `yarn build`
+```sh
+cd portfolio
+yarn install
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Start a Node development server.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```sh
+yarn dev
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The application will open in your browser at http://localhost:3000
 
-### `yarn eject`
+## Step 2: Create an .env file
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+In this step, you will have to create an `.env` file at the root of the directory, so that you can provide your environment variables.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Variables
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+The environment variables you define here are used for Spotify's API. GitHub and Medium are open access so you don't have to worry about providing those values.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+- `SPOTIFY_CLIENT_ID`
+- `SPOTIFY_CLIENT_SECRET`
+- `SPOTIFY_REFRESH_TOKEN`
 
-## Learn More
+In order to learn more about spotify integration and how to generate these values, please head over to [Spotify dashboard] and create a new app.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Step 3: Changing GitHub and Medium URL
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Although, you don't have to provide environment variables for these two, you still will need to change their url so that they can point to your account.
 
-### Code Splitting
+You can make these changes inside the `pages/api` folder.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Credits
 
-### Analyzing the Bundle Size
+Credits to [Lee Rob] and his [personal portfolio], for inspiring me to create this project.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Contact
 
-### Making a Progressive Web App
+If you have any issues setting up this portfolio project, please reach out to me on my [twitter].
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+[spotify dashboard]: https://developer.spotify.com/dashboard/
+[lee rob]: https://twitter.com/leeerob
+[personal portfolio]: https://leerob.io/
+[twitter]: https://twitter.com/adrinlolx
