@@ -1,10 +1,10 @@
-import styled from "styled-components";
 import Container from "components/Layout/Container";
 import { Posts } from "components/Posts";
+import styled from "styled-components";
 
 export default function Blog() {
   return (
-    <Container title="Blog - Lasha Kakabadze">
+    <Container title="Blog - Binod Nagarkoti">
       <h1>Blog</h1>
       <Paragraph>
         In the recent years, I've found out that writing blogs is a great way to

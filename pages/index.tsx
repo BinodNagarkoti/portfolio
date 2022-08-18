@@ -1,23 +1,23 @@
+import Container from "components/Layout/Container";
+import { Posts } from "components/Posts";
+import { Projects } from "components/Projects";
+import { Timeline } from "components/Timeline";
+import { devices } from "lib/displayDevice";
+import { StringProps } from "lib/types";
+import Image from "next/image";
 import Link from "next/link";
 import styled from "styled-components";
-import Image from "next/image";
-import { Timeline } from "components/Timeline";
-import { Projects } from "components/Projects";
-import { Posts } from "components/Posts";
-import Container from "components/Layout/Container";
-import { StringProps } from "lib/types";
-import { devices } from "lib/displayDevice";
 
 import { Flex } from "components/Layout/Container/styles";
 
-import ProfilePicture from "public/assets/png/Lasha.png";
+import ProfilePicture from "public/assets/png/me.png";
 
 export default function Home() {
   return (
     <Container>
       <HeroFlex align="flex-start">
         <ContentWrapper>
-          <h1>Lasha Kakabadze</h1>
+          <h1>Binod Nagarkoti</h1>
           <h2>React.js Developer</h2>
           <p>
             Passionate React Developer with 3+ years of experience blending the
@@ -32,7 +32,7 @@ export default function Home() {
         </ContentWrapper>
         <RoundImage
           src={ProfilePicture}
-          alt="Picture of Lasha"
+          alt="Picture of Binod"
           width="150px"
           height="150px"
         />

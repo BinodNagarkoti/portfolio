@@ -4,7 +4,7 @@ import { Paragraph } from "pages/blog";
 
 export default function Testimonials() {
   return (
-    <Container title="Testimonials - Lasha Kakabadze">
+    <Container title="Testimonials - Binod Nagarkoti">
       <h1>Testimonials</h1>
       <Paragraph>
         Outside of being employed full-time at Vabaco, I sometimes freelance on{" "}

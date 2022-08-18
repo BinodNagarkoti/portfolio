@@ -1,18 +1,15 @@
-import React, { useState, useEffect } from "react";
-import Head from "next/head";
 import { useTheme } from "next-themes";
+import Head from "next/head";
 import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
 
-import { Header } from "components/Layout/Header";
-import { Footer } from "components/Layout/Footer";
 import {
-  StyledContainer,
-  Main,
-  StyledHTML,
-  Section,
+  Main, Section,
   SectionGrid,
-  SectionWrapper,
+  SectionWrapper, StyledContainer, StyledHTML
 } from "components/Layout/Container/styles";
+import { Footer } from "components/Layout/Footer";
+import { Header } from "components/Layout/Header";
 
 interface ContainerProps {
   children: React.ReactNode;
@@ -23,7 +20,7 @@ interface ContainerProps {
 export default function Container({ children, ...customMeta }: ContainerProps) {
   const router = useRouter();
   const meta = {
-    title: "Lasha Kakabadze – React.js Developer",
+    title: "Binod Namagrkoti – React.js Developer",
     description: `React developer, JavaScript enthusiast, and freelancer.`,
     image: "https://www.adrinlol.com/assets/png/Thumbnail.png",
     type: "website",
@@ -51,7 +48,7 @@ export default function Container({ children, ...customMeta }: ContainerProps) {
         />
         <link rel="canonical" href={`https://adrinlol.com${router.asPath}`} />
         <meta property="og:type" content={meta.type} />
-        <meta property="og:site_name" content="Lasha Kakabadze" />
+        <meta property="og:site_name" content="Binod Nagarkoti" />
         <meta property="og:description" content={meta.description} />
         <meta property="og:title" content={meta.title} />
         <meta property="og:image" content={meta.image} />

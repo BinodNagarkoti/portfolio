@@ -1,13 +1,12 @@
-import NowPlaying from "components/NowPlaying";
 import { Navigation } from "components/Layout/Navigation";
-import { ExternalLinkProps, StringProps } from "lib/types";
 import ScrollToTop from "components/Layout/ScrollToTop";
+import NowPlaying from "components/NowPlaying";
+import { ExternalLinkProps, StringProps } from "lib/types";
 
 import { Flex, StyledContainer } from "components/Layout/Container/styles";
 import {
-  FooterContainer,
-  GridContainer,
-  FlexLinks,
+  FlexLinks, FooterContainer,
+  GridContainer
 } from "components/Layout/Footer/styles";
 
 const ExternalLink = ({ href, children }: ExternalLinkProps) => (
@@ -30,18 +29,18 @@ export const Footer = ({ darkTheme }: StringProps) => {
               <Navigation href="/testimonials" text="Testimonials" />
             </FlexLinks>
             <FlexLinks>
-              <ExternalLink href="https://twitter.com/Adrinlolx">
+              <ExternalLink href="https://twitter.com/BinodDNagarkoti">
                 Twitter
               </ExternalLink>
-              <ExternalLink href="https://github.com/Adrinlol">
+              <ExternalLink href="https://github.com/BinodNagarkoti">
                 GitHub
               </ExternalLink>
-              <ExternalLink href="https://www.linkedin.com/in/lasha-kakabadze/">
+              <ExternalLink href="https://www.linkedin.com/in/binod-nagarkoti-496245128/">
                 LinkedIn
               </ExternalLink>
             </FlexLinks>
             <FlexLinks>
-              <ExternalLink href="https://www.linkedin.com/in/lasha-kakabadze/">
+              <ExternalLink href="https://www.linkedin.com/in/binod-nagarkoti-496245128/">
                 Download
               </ExternalLink>
               <Navigation href="/top-tracks" text="Top Tracks" />
