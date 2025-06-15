@@ -208,5 +208,6 @@ export const personalInfo = {
   location: 'Kathmandu, Nepal',
   github: 'https://github.com/yourusername',
   linkedin: 'https://linkedin.com/in/yourusername',
-  cvLink: '/path-to-your-cv.pdf' // Ensure this path is correct or remove if not used
+  cvLink: '/binod_nagarkoti.pdf' 
 };
+

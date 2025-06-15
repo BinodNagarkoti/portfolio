@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useRef, useEffect, useCallback } from 'react';
@@ -75,7 +76,7 @@ const P5Sketch: React.FC = () => {
               const parentRect = sketchRef.current.getBoundingClientRect();
               p.createCanvas(parentRect.width, parentRect.height, p.WEBGL);
               p.pixelDensity(1);
-              p.background(240, 240, 240); // Light gray background, similar to theme
+              // Background is now handled by p.clear() in draw for transparency
               
               if (myShader) {
                 p.shader(myShader);
@@ -88,13 +89,14 @@ const P5Sketch: React.FC = () => {
           };
 
           p.draw = () => {
+            p.clear(); // Clear with transparency
             if (myShader) {
               myShader.setUniform('u_resolution', [p.width, p.height]);
               myShader.setUniform('u_time', p.millis() / 1000.0); // Time in seconds
               p.rect(0, 0, p.width, p.height); // Draw a rectangle that covers the canvas
             } else {
               // Fallback if shader isn't loaded
-              p.background(200);
+              p.background(200, 200, 200, 50); // Light gray, semi-transparent fallback
               p.fill(0);
               p.textAlign(p.CENTER, p.CENTER);
               p.text("Shader not loaded", 0,0);
