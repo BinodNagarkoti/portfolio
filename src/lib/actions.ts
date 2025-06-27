@@ -427,17 +427,13 @@ function slugify(text: string): string {
         .replace(/-+$/, '');
 }
 
-export async function getPosts(options: { publishedOnly?: boolean; admin?: boolean } = {}): Promise<{ data: Post[] | null, error: string | null }> {
-    const { publishedOnly = false, admin = false } = options;
+export async function getPosts(options: { admin?: boolean } = {}): Promise<{ data: Post[] | null, error: string | null }> {
+    const { admin = false } = options;
     noStore();
     const supabase = await createSupabaseServerClient(admin);
 
     let query = supabase.from('posts').select('*');
 
-    if (publishedOnly) {
-        query = query.eq('published', true);
-    }
-    
     // In a multi-user CMS, you'd filter by personal_info_id here
     // For this single-user portfolio, admin sees all, public sees published.
 
@@ -457,12 +453,11 @@ export async function getPostBySlug(slug: string): Promise<{ data: Post | null, 
         .from('posts')
         .select('*')
         .eq('slug', slug)
-        .eq('published', true)
         .single();
-    
+
     if (error) {
         if (error.code !== 'PGRST116') { // Don't log "not found" as a server error
-             console.error('Database Error: Failed to Fetch Post by Slug.', error.message);
+            console.error('Database Error: Failed to Fetch Post by Slug.', error.message);
         }
         return { data: null, error: error.message };
     }
@@ -470,11 +465,11 @@ export async function getPostBySlug(slug: string): Promise<{ data: Post | null, 
 }
 
 const PostSchema = z.object({
-  id: z.string().optional(),
-  title: z.string().min(1, 'Title is required'),
-  content: z.string().min(1, 'Content is required'),
-  tags: z.string().optional(),
-  published_at: z.date().optional(),
+    id: z.string().optional(),
+    title: z.string().min(1, 'Title is required'),
+    content: z.string().min(1, 'Content is required'),
+    tags: z.string().optional(),
+    published_at: z.date().optional(),
 });
 
 export async function upsertPost(formData: { id?: string, [key: string]: any }): Promise<{ data: Post | null, error: string | null }> {

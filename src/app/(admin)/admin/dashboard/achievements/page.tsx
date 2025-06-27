@@ -107,11 +107,11 @@ export default function AchievementsAdminPage() {
                             <EditIcon className="mr-2 h-4 w-4" /> Edit
                         </Button>
                         <AlertDialog>
-                            <AlertDialogTrigger asChild>
+                            <AlertDialogTitle asChild>
                                 <Button variant="destructive" size="sm">
                                 <Trash2Icon className="mr-2 h-4 w-4" /> Delete
                                 </Button>
-                            </AlertDialogTrigger>
+                            </AlertDialogTitle>
                             <AlertDialogContent>
                                 <AlertDialogHeader>
                                     <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
