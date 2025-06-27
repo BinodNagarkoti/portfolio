@@ -6,6 +6,10 @@ import ProjectsSection from '@/components/sections/ProjectsSection';
 import PersonalProjectsSection from '@/components/sections/PersonalProjectsSection';
 import ContactSection from '@/components/sections/ContactSection';
 import { getPersonalInfo } from '@/lib/actions';
+import ExperienceSection from '@/components/sections/ExperienceSection';
+import AchievementsSection from '@/components/sections/AchievementsSection';
+import BlogSection from '@/components/sections/BlogSection';
+import EducationSection from '@/components/sections/EducationSection';
 
 export default async function Home() {
     const personalInfo = await getPersonalInfo();
@@ -13,9 +17,11 @@ export default async function Home() {
         <>
             <HeroSection personalInfo={personalInfo} />
             <AboutSection />
-            <SkillsSection />
+            <ExperienceSection />
+            <EducationSection />
             <ProjectsSection />
-            <PersonalProjectsSection />
+            <AchievementsSection />
+            <BlogSection />
             <ContactSection personalInfo={personalInfo} />
         </>
     );
