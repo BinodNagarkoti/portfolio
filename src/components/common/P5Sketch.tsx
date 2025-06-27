@@ -17,6 +17,12 @@ const P5Sketch: React.FC = () => {
         const p5Global = window.p5 as any;
         p5Global.RendererGL.prototype._initContext = function() {
           try {
+            // Ensure glAttributes exists and enable alpha
+            if (!this._pInst._glAttributes) {
+              this._pInst._glAttributes = {};
+            }
+            this._pInst._glAttributes.alpha = true;
+
             this.drawingContext =
               this.canvas.getContext('webgl2', this._pInst._glAttributes) ||
               this.canvas.getContext('webgl', this._pInst._glAttributes) ||
@@ -39,7 +45,7 @@ const P5Sketch: React.FC = () => {
           }
         };
         p5PrototypeModified = true;
-        console.log('p5.RendererGL.prototype._initContext modified.');
+        console.log('p5.RendererGL.prototype._initContext modified for alpha.');
       } catch (e) {
         console.error('Failed to modify p5.RendererGL.prototype._initContext:', e);
       }
@@ -52,10 +58,9 @@ const P5Sketch: React.FC = () => {
     
     const loadP5 = async () => {
       const p5Constructor = (await import('p5')).default;
-      applyPrototypeModification(); // Attempt to apply modification before new p5 instance
+      applyPrototypeModification(); 
 
       if (sketchRef.current && !p5InstanceRef.current) {
-        // Ensure the container is empty
         while (sketchRef.current.firstChild) {
           sketchRef.current.removeChild(sketchRef.current.firstChild);
         }
@@ -74,14 +79,21 @@ const P5Sketch: React.FC = () => {
           p.setup = () => {
             if (sketchRef.current) {
               const parentRect = sketchRef.current.getBoundingClientRect();
-              p.createCanvas(parentRect.width, parentRect.height, p.WEBGL);
+              const canvas = p.createCanvas(parentRect.width, parentRect.height, p.WEBGL);
+              canvas.elt.style.backgroundColor = 'transparent'; // Optional, container div style should prevail
+
+              // Ensure WebGL context is cleared transparently after canvas creation
+              if (p.drawingContext) {
+                const gl = p.drawingContext as WebGLRenderingContext;
+                gl.clearColor(0, 0, 0, 0); // Set clear color to transparent black
+              }
+              
               p.pixelDensity(1);
-              // Background is now handled by p.clear() in draw for transparency
               
               if (myShader) {
                 p.shader(myShader);
-                p.noStroke(); // Common for shader-based visuals
-                 myShader.setUniform('u_resolution', [p.width, p.height]);
+                p.noStroke(); 
+                myShader.setUniform('u_resolution', [p.width, p.height]);
               } else {
                 console.warn("Shader not loaded, p5 sketch might not render as expected.");
               }
@@ -89,15 +101,20 @@ const P5Sketch: React.FC = () => {
           };
 
           p.draw = () => {
-            p.clear(); // Clear with transparency
+            if (p.drawingContext) {
+              const gl = p.drawingContext as WebGLRenderingContext;
+              // Clear the canvas with the transparent color set in setup
+              gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+            } else {
+              p.clear(); // Fallback clear for non-WebGL or if context not ready
+            }
+
             if (myShader) {
               myShader.setUniform('u_resolution', [p.width, p.height]);
-              myShader.setUniform('u_time', p.millis() / 1000.0); // Time in seconds
-              p.rect(0, 0, p.width, p.height); // Draw a rectangle that covers the canvas
+              myShader.setUniform('u_time', p.millis() / 1000.0); 
+              p.rect(0, 0, p.width, p.height); 
             } else {
-              // Fallback if shader isn't loaded
-              p.background(200, 200, 200, 50); // Light gray, semi-transparent fallback
-              p.fill(0);
+              p.fill(0); // Fallback text color if shader fails
               p.textAlign(p.CENTER, p.CENTER);
               p.text("Shader not loaded", 0,0);
             }
@@ -109,6 +126,11 @@ const P5Sketch: React.FC = () => {
               p.resizeCanvas(parentRect.width, parentRect.height);
                if (myShader) {
                 myShader.setUniform('u_resolution', [p.width, p.height]);
+              }
+               // Re-apply clear color on resize if context is available
+              if (p.drawingContext) {
+                const gl = p.drawingContext as WebGLRenderingContext;
+                gl.clearColor(0, 0, 0, 0);
               }
             }
           };
@@ -133,3 +155,4 @@ const P5Sketch: React.FC = () => {
 };
 
 export default P5Sketch;
+
