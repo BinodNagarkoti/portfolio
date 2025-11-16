@@ -13,7 +13,7 @@ export async function login(formData: FormData) {
         redirect('/error')
     }
     revalidatePath('/', 'layout')
-    redirect('/')
+    redirect('/admin/dashboard')
 }
 export async function getPersonalInfo(): Promise<PersonalInfo | null> {
     noStore();
