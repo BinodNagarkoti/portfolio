@@ -99,6 +99,33 @@ export async function upsertProject(formData: FormData): Promise<{ data: Project
     let coverImageUrl = validatedFields.data.cover_image_url || null;
     const imageFile = formData.get('cover_image') as File | null;
 
+    // If we're updating an existing project and there's a new image file, delete the old image
+    if (validatedFields.data.id && imageFile && imageFile.size > 0) {
+        // Get the existing project to get the old image URL
+        const { data: existingProject, error: fetchError } = await supabase
+            .from('projects')
+            .select('cover_image_url')
+            .eq('id', validatedFields.data.id)
+            .single();
+
+        if (fetchError) {
+            console.error('Could not fetch existing project to delete old image:', fetchError);
+        } else if (existingProject?.cover_image_url) {
+            // Extract the path from the URL and delete the old image
+            try {
+                const path = new URL(existingProject.cover_image_url).pathname.split('/projects/').pop();
+                if (path) {
+                    const { error: deleteError } = await supabase.storage.from('projects').remove([path]);
+                    if (deleteError) {
+                        console.error('Could not delete old image:', deleteError);
+                    }
+                }
+            } catch (urlError) {
+                console.error('Could not parse image URL for deletion:', urlError);
+            }
+        }
+    }
+
     if (imageFile && imageFile.size > 0) {
         const fileName = `${personalInfo.id}/${Date.now()}_${imageFile.name}`;
         const { data: uploadData, error: uploadError } = await supabase.storage
