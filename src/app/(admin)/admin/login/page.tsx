@@ -22,6 +22,9 @@ export default function LoginPage() {
       </div>
       </div>
       <Button formAction={login} className="w-full bg-primary text-primary-foreground p-2 rounded-md">Log in</Button>
+      <div className="text-center text-sm">
+        <a href="/admin/reset-password" className="text-primary hover:underline">Forgot your password?</a>
+      </div>
     </form>
   </div>)
 }
