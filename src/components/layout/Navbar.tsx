@@ -18,14 +18,14 @@ const navItems = [
   { name: 'Contact', href: '#contact' },
 ];
 
-const Navbar = ({ personalInfo }: { personalInfo: PersonalInfo }) => {
+const Navbar = ({ personalInfo }: { personalInfo: PersonalInfo | null }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [navStyle, setNavStyle] = useState<'stage1' | 'stage2' | 'stage3' | 'stage4' | 'stage5'>('stage1');
   
-  const initials = personalInfo.name
+  const initials = personalInfo?.name
     .split(' ')
     .map(n => n[0])
-    .join('');
+    .join('') || '';
 
   useEffect(() => {
     const handleScroll = () => {

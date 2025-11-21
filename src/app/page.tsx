@@ -23,7 +23,7 @@ export default async function Home() {
             <AboutSection />
             <ExperienceSection />
             <EducationSection />
-            <ProjectsSection />
+            <ProjectsSection personalInfo={personalInfo} />
             <AchievementsSection />
             <BlogSection />
             <ContactSection personalInfo={personalInfo} />
