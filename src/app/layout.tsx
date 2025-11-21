@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { Toaster } from '@/components/ui/toaster';
+import { toast } from "sonner"
+import { Toaster } from "@/components/ui/sonner"
 
 // This is the root layout. It applies to all routes.
 // Metadata is now defined in the specific layouts for each route group.

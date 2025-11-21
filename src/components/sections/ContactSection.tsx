@@ -48,7 +48,7 @@ const ContactSection = ({ personalInfo }: { personalInfo: PersonalInfo | null })
     return (
         <SectionWrapper id="contact" title="Get In Touch" subtitle="Contact">
             <div className="grid md:grid-cols-2 gap-8 items-start">
-                <Card className="bg-card/50 backdrop-blur-sm">
+                <Card className="bg-card/50 backdrop-blur-xs">
                     <CardHeader>
                         <CardTitle>Let's Collaborate</CardTitle>
                         <CardDescription>
@@ -79,7 +79,7 @@ const ContactSection = ({ personalInfo }: { personalInfo: PersonalInfo | null })
                     </CardContent>
                 </Card>
 
-                <Card className="bg-card/50 backdrop-blur-sm">
+                <Card className="bg-card/50 backdrop-blur-xs">
                     <CardHeader>
                         <CardTitle>Send me a message</CardTitle>
                     </CardHeader>

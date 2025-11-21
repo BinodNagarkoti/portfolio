@@ -102,7 +102,7 @@ const TechCarousel = () => {
                   textArea.remove();
                   handleIconClick(event,tech.name);
                 }}
-               key={`${rowIndex}-${techIndex}`} className="flex flex-col h-20 w-20 flex-shrink-0 items-center justify-center gap-2 rounded-2xl bg-card p-2 shadow-md backdrop-blur-sm">
+               key={`${rowIndex}-${techIndex}`} className="flex flex-col h-20 w-20 shrink-0 items-center justify-center gap-2 rounded-2xl bg-card p-2 shadow-md backdrop-blur-xs">
                 <Image
                   title={tech.name}
                   src={tech.svg_icon}

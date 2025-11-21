@@ -154,7 +154,7 @@ const ProjectsSection = ({ personalInfo }: { personalInfo?: PersonalInfo | null 
             <div className="relative">
               {/* Project content with background blended to page bg */}
               <div
-                className="bg-background/50 backdrop-blur-sm rounded-xl p-6 border border-border/20"
+                className="bg-background/50 backdrop-blur-xs rounded-xl p-6 border border-border/20"
                 onTouchStart={(e) => {
                   setStartX(e.touches[0].clientX);
                   setStartY(e.touches[0].clientY);

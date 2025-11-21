@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const AboutContent = () => {
   return (
-    <Card className="bg-card/50 backdrop-blur-sm">
+    <Card className="bg-card/50 backdrop-blur-xs">
       <CardHeader>
         <CardTitle>Professional Background</CardTitle>
       </CardHeader>

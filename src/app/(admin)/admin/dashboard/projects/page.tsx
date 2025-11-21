@@ -102,7 +102,7 @@ export default function ProjectsAdminPage() {
                 <CardTitle>{project.title}</CardTitle>
                 <CardDescription className="line-clamp-2">{project.description}</CardDescription>
               </CardHeader>
-              <CardContent className="flex-grow">
+              <CardContent className="grow">
                 <p className="text-sm text-muted-foreground mb-2">Technologies:</p>
                 <div className="flex flex-wrap gap-1">
                   {project.technologies?.map(tech => (

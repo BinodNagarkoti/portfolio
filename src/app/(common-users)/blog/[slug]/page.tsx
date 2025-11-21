@@ -38,7 +38,7 @@ export default async function BlogPostPage({ params }: Props) {
   return (
     <SectionWrapper>
       <div className="max-w-4xl mx-auto pt-16">
-        <Card className="bg-card/50 backdrop-blur-sm">
+        <Card className="bg-card/50 backdrop-blur-xs">
           <CardHeader className="text-center border-b pb-6">
             <CardTitle className="text-4xl md:text-5xl font-bold font-headline">{post.title}</CardTitle>
             <CardDescription className="pt-2">

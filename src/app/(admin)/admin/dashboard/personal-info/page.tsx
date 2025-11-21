@@ -191,7 +191,7 @@ export default function PersonalInfoPage() {
           <div>
             <Label htmlFor="cv_url">CV / Resume (PDF)</Label>
             <div className="flex items-center gap-2">
-                <Input id="cv_file_input" type="file" accept=".pdf" onChange={handleCvUpload} className="flex-grow" />
+                <Input id="cv_file_input" type="file" accept=".pdf" onChange={handleCvUpload} className="grow" />
                 <Button type="button" variant="outline" size="icon" onClick={() => document.getElementById('cv_file_input')?.click()} aria-label="Upload CV">
                     <UploadCloudIcon />
                 </Button>

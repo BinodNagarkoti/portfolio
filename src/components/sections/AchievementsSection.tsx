@@ -19,16 +19,16 @@ const AchievementsSection = async () => {
     <SectionWrapper id="achievements" title="Achievements" subtitle="My Accomplishments">
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         {achievements.map((ach) => (
-          <Card key={ach.id} className="bg-card/50 backdrop-blur-sm flex flex-col group">
+          <Card key={ach.id} className="bg-card/50 backdrop-blur-xs flex flex-col group">
             <CardHeader className="flex-row gap-4 items-center">
-               <AwardIcon className="h-8 w-8 text-primary flex-shrink-0" />
+               <AwardIcon className="h-8 w-8 text-primary shrink-0" />
                <div>
                 <CardTitle>{ach.title}</CardTitle>
                 {ach.date_achieved && <CardDescription>{formatDate(ach.date_achieved)}</CardDescription>}
                </div>
             </CardHeader>
             {ach.description && 
-                <CardContent className="flex-grow">
+                <CardContent className="grow">
                     <p className="text-muted-foreground text-sm">{ach.description}</p>
                 </CardContent>
             }

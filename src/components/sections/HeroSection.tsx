@@ -56,7 +56,7 @@ const HeroSection = ({ personalInfo }: { personalInfo: PersonalInfo | null }) =>
                                     priority
                                 />
                             </div>
-                            <div className="absolute -bottom-6 -right-6 size-16 rounded-2xl bg-primary/10 backdrop-blur-sm flex items-center justify-center border border-primary/20 shadow-lg">
+                            <div className="absolute -bottom-6 -right-6 size-16 rounded-2xl bg-primary/10 backdrop-blur-xs flex items-center justify-center border border-primary/20 shadow-lg">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-code-xml h-8 w-8 text-primary"><path d="m18 16 4-4-4-4"></path><path d="m6 8-4 4 4 4"></path><path d="m14.5 4-5 16"></path></svg>
                             </div>
                         </div>

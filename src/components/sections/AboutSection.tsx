@@ -22,7 +22,7 @@ const AboutSection = async () => {
   return (
     <SectionWrapper id="about" title="About Me" subtitle="">
       <div className="grid md:grid-cols-2 gap-8 items-start">
-        <Card className="bg-card/50 backdrop-blur-sm">
+        <Card className="bg-card/50 backdrop-blur-xs">
           <CardHeader>
             <CardTitle>Professional Background</CardTitle>
           </CardHeader>
@@ -32,7 +32,7 @@ const AboutSection = async () => {
            
           </CardContent>
         </Card>
-        <Card className="bg-card/50 backdrop-blur-sm">
+        <Card className="bg-card/50 backdrop-blur-xs">
           <CardHeader>
             <CardTitle>Technical Skills</CardTitle>
           </CardHeader>

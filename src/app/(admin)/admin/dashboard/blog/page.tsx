@@ -168,7 +168,7 @@ export default function BlogAdminPage() {
           <DialogHeader>
             <DialogTitle>{editingPost ? 'Edit Post' : 'Add New Post'}</DialogTitle>
           </DialogHeader>
-          <div className="flex-grow overflow-y-auto pr-6">
+          <div className="grow overflow-y-auto pr-6">
             <PostForm post={editingPost} onSuccess={onFormSuccess} />
           </div>
         </DialogContent>

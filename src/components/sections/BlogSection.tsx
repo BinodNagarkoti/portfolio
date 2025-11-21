@@ -18,12 +18,12 @@ const BlogSection = async () => {
     <SectionWrapper id="blog" title="Latest Blog" subtitle="">
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         {posts.map((post) => (
-          <Card key={post.id} className="flex flex-col bg-card/50 backdrop-blur-sm">
+          <Card key={post.id} className="flex flex-col bg-card/50 backdrop-blur-xs">
             <CardHeader>
               <CardTitle>{post.title}</CardTitle>
               <CardDescription>{format(parseISO(post.created_at), 'PPP')}</CardDescription>
             </CardHeader>
-            <CardContent className="flex-grow">
+            <CardContent className="grow">
               <p className="text-muted-foreground text-sm">{post.snippet}</p>
             </CardContent>
             <CardFooter className="flex-col items-start gap-4">

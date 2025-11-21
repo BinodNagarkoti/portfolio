@@ -40,7 +40,7 @@ const BlogListPage: React.FC = () => {
             {posts.map((post) => (
                 <div
                 key={post.id}
-                className="bg-white dark:bg-gray-900 shadow-md rounded-lg p-6 hover:shadow-lg transition-shadow border border-gray-100 dark:border-gray-800"
+                className="bg-white dark:bg-gray-900 shadow-md rounded-lg p-6 hover:shadow-lg transition-shadow-sm border border-gray-100 dark:border-gray-800"
                 >
                 <h2 className="text-2xl font-semibold mb-2 text-blue-700 dark:text-blue-400">{post.title}</h2>
                 <div className="flex items-center text-gray-400 dark:text-gray-500 text-xs mb-4">

@@ -33,7 +33,7 @@ const ExperienceSection = async () => {
             <div className="md:flex md:items-center md:justify-between">
               {/* Content Card */}
               <div className={`md:w-[calc(50%-2rem)] ${index % 2 === 0 ? 'md:order-1' : 'md:order-2'}`}>
-                <Card className="bg-card/50 backdrop-blur-sm shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                <Card className="bg-card/50 backdrop-blur-xs shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
                   <CardHeader>
                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
                         <div>

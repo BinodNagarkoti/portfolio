@@ -3,6 +3,8 @@
 
 import type { ReactNode } from 'react';
 import { useState, useEffect } from 'react';
+import { Separator } from "@/components/ui/separator"
+
 import {
   SidebarProvider,
   Sidebar,
@@ -94,17 +96,31 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <SidebarProvider defaultOpen>
-      <Sidebar collapsible="icon" className="border-r border-sidebar-border">
-        <SidebarHeader className="p-4">
-          <Link href="/admin/dashboard" className="flex items-center gap-2 text-lg font-semibold font-headline text-sidebar-primary">
-            <CodeXmlIcon className="h-7 w-7" />
-             <span className="group-data-[collapsible=icon]:hidden">
-              {userName} Admin
-            </span>
+    <SidebarProvider defaultOpen  style={
+        {
+          "--sidebar-width": "20rem",
+          "--header-height": "4rem",
+
+        } as React.CSSProperties
+      }>
+      <Sidebar variant="sidebar" collapsible="none"
+      >
+        <SidebarHeader className="p-4 border-b border-sidebar-border">
+          <Link href="/admin/dashboard" className="flex items-center gap-3 p-2 rounded-lg hover:bg-sidebar-accent transition-colors duration-200">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+              <CodeXmlIcon className="h-6 w-6" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-lg font-bold font-headline text-sidebar-primary group-data-[collapsible=icon]:hidden">
+                {userName}
+              </span>
+              <span className="text-xs font-medium text-sidebar-foreground/70 group-data-[collapsible=icon]:hidden">
+                Admin Panel
+              </span>
+            </div>
           </Link>
         </SidebarHeader>
-        <SidebarContent className="p-2">
+        <SidebarContent className="p-3">
           {navItems.map((group, groupIndex) => (
             <SidebarGroup key={groupIndex} className="mb-4">
               {group.label && !group.href && (
@@ -119,7 +135,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                       asChild
                       isActive={pathname === group.href}
                       tooltip={{ children: group.label }}
-                      className="data-[active=true]:bg-sidebar-primary data-[active=true]:text-sidebar-primary-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                      className="data-[active=true]:bg-sidebar-primary data-[active=true]:text-sidebar-primary-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground rounded-lg transition-colors duration-200"
                     >
                       <Link href={group.href}>
                         <group.icon />
@@ -134,7 +150,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                         asChild
                         isActive={pathname === item.href}
                         tooltip={{ children: item.label }}
-                        className="data-[active=true]:bg-sidebar-primary data-[active=true]:text-sidebar-primary-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                        className="data-[active=true]:bg-sidebar-primary data-[active=true]:text-sidebar-primary-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground rounded-lg transition-colors duration-200"
                       >
                         <Link href={item.href}>
                           <item.icon />
@@ -148,36 +164,49 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             </SidebarGroup>
           ))}
         </SidebarContent>
-        <SidebarFooter className="p-2">
+        <SidebarFooter className="p-2 mt-96">
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton
                 asChild
-                className="hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                className="text-red-600 hover:bg-red-50 hover:text-red-700 data-[active=true]:bg-red-100 data-[active=true]:text-red-700 rounded-lg transition-colors duration-200 border border-red-200"
               >
                 <Link href="/">
-                  <LogOutIcon />
-                  <span>Back to Site</span>
+                  <LogOutIcon className="text-red-600" />
+                  <span className="text-red-600 font-medium">Back to Site</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarFooter>
       </Sidebar>
-      <SidebarInset className="flex flex-col">
-        <header className="sticky top-0 z-10 flex h-14 items-center justify-between gap-4 border-b bg-background/80 px-4 backdrop-blur-sm sm:h-16 sm:px-6">
-          <SidebarTrigger className="md:hidden" />
-          <h1 className="text-xl font-semibold">
-            {navItems
-              .flatMap((group) => group.items || [group])
-              .find((item) => item.href === pathname)?.label || 'Dashboard'}
-          </h1>
-          <div>
-            {/* User menu or other actions can go here */}
-          </div>
-        </header>
-        <main className="flex-1 overflow-auto p-4 sm:p-6">{children}</main>
-      </SidebarInset>
+      <div className="flex flex-col flex-1 overflow-hidden">
+    {/* <header className="sticky top-0 z-10 flex h-[--header-height] shrink-0 items-center gap-2 border-b bg-background/90 backdrop-blur-sm transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-[--header-height]">
+               <div className="flex w-full items-center gap-2 px-4 lg:gap-4 lg:px-6">
+
+           <SidebarTrigger className="mr-1" />
+             <Separator
+          orientation="vertical"
+           className="mx-1 data-[orientation=vertical]:h-6"
+         />
+           <h1 className="text-2xl font-bold tracking-tight">
+             {navItems
+               .flatMap((group) => group.items || [group])
+               .find((item) => item.href === pathname)?.label || 'Dashboard'}
+           </h1>
+           <div className="ml-auto flex items-center gap-2">
+             {/* User menu or other actions can go here */}
+            {/* </div>
+           </div>
+         </header> */}
+         <main className="flex flex-1 flex-col overflow-auto">
+           <div className="@container/main flex flex-1 flex-col gap-2">
+             <div className="flex flex-col gap-4 py-6 px-4 md:gap-6 md:py-8 md:px-6">
+               {children}
+             </div>
+           </div>
+         </main>
+       </div>
     </SidebarProvider>
   );
 }
