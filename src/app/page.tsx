@@ -21,12 +21,14 @@ export default async function Home() {
             <Navbar personalInfo={personalInfo} />
             <HeroSection personalInfo={personalInfo} />
             <AboutSection />
+            <SkillsSection />
             <ExperienceSection />
             <EducationSection />
             <ProjectsSection personalInfo={personalInfo} />
             <AchievementsSection />
             <BlogSection />
             <ContactSection personalInfo={personalInfo} />
+
         </>
     );
 }
