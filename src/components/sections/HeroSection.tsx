@@ -28,11 +28,20 @@ const HeroSection = ({ personalInfo }: { personalInfo: PersonalInfo | null }) =>
                         <p className="mt-4 max-w-lg text-lg text-muted-foreground/80 mx-auto md:mx-0">
                             {personalInfo?.bio ?? ''}
                         </p>
-               
+
                         <div className="flex flex-wrap gap-3 pt-2 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-400">
                             <span className="px-4 py-2 text-sm rounded-full bg-primary/10 text-primary border border-primary/20">React</span>
+                            <span className="px-4 py-2 text-sm rounded-full bg-primary/10 text-primary border border-primary/20">Next.js</span>
+                            <span className="px-4 py-2 text-sm rounded-full bg-primary/10 text-primary border border-primary/20">Tailwind CSS</span>
                             <span className="px-4 py-2 text-sm rounded-full bg-primary/10 text-primary border border-primary/20">Vite</span>
-                            <span className="px-4 py-2 text-sm rounded-full bg-primary/10 text-primary border border-primary/20">Typescript</span></div>
+                            <span className="px-4 py-2 text-sm rounded-full bg-primary/10 text-primary border border-primary/20">Typescript</span>
+                            <span className="px-4 py-2 text-sm rounded-full bg-primary/10 text-primary border border-primary/20">Supabase</span>
+                            <span className="px-4 py-2 text-sm rounded-full bg-primary/10 text-primary border border-primary/20">Stripe</span>
+                            <span className="px-4 py-2 text-sm rounded-full bg-primary/10 text-primary border border-primary/20">Framer Motion</span>
+                            <span className="px-4 py-2 text-sm rounded-full bg-primary/10 text-primary border border-primary/20">Shadcn UI</span>
+                            <span className="px-4 py-2 text-sm rounded-full bg-primary/10 text-primary border border-primary/20">Tailwind CSS</span>
+                            <span className="px-4 py-2 text-sm rounded-full bg-primary/10 text-primary border border-primary/20">Typescript</span>
+                        </div>
                         <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
                             <Button size="lg" asChild>
                                 <Link href="#contact">
