@@ -81,6 +81,7 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
     }
     // Append all other form values
     Object.entries(values).forEach(([key, value]) => {
+      if(key === 'cover_image_url') return; // Skip cover_image_url as we handle imageFile separately
       if (value !== undefined && value !== null) {
           formData.append(key, value as string);
       }
@@ -155,6 +156,10 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
             </FormItem>
           )}
         />
+         <FormField
+          control={form.control}
+          name="cover_image_url"
+          render={({ field }) => (
         <FormItem>
           <FormLabel>Cover Image</FormLabel>
           {imagePreview && (
@@ -169,7 +174,7 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
             Upload a new image to replace the existing one.
           </FormDescription>
         </FormItem>
-
+          )}/>
         <FormField
           control={form.control}
           name="technologies"
