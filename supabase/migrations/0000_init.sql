@@ -219,6 +219,14 @@ ON CONFLICT (id) DO NOTHING;
 CREATE POLICY "Public can read project images" ON storage.objects FOR SELECT USING (bucket_id = 'projects');
 CREATE POLICY "Owner can manage project images" ON storage.objects FOR ALL USING (bucket_id = 'projects' AND auth.role() = 'authenticated') WITH CHECK (bucket_id = 'projects' AND auth.role() = 'authenticated');
 
+-- Bucket for posts images
+INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+VALUES ('posts', 'posts', true, 5242880, ARRAY['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
+ON CONFLICT (id) DO NOTHING;
+
+CREATE POLICY "Public can read posts images" ON storage.objects FOR SELECT USING (bucket_id = 'posts');
+CREATE POLICY "Owner can manage posts images" ON storage.objects FOR ALL USING (bucket_id = 'posts' AND auth.role() = 'authenticated') WITH CHECK (bucket_id = 'posts' AND auth.role() = 'authenticated');
+
 -- Bucket for certification PDFs
 INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 VALUES ('certifications', 'certifications', true, 5242880, ARRAY['application/pdf'])

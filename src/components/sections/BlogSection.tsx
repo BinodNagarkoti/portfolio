@@ -8,7 +8,7 @@ import { getPosts } from '@/lib/actions';
 import { format, parseISO } from 'date-fns';
 
 const BlogSection = async () => {
-  const { data: posts, error } = await getPosts({ publishedOnly: true });
+  const { data: posts, error } = await getPosts({ admin: false });
 
   if (error || !posts || posts.length === 0) {
     return null;
@@ -24,7 +24,7 @@ const BlogSection = async () => {
               <CardDescription>{format(parseISO(post.created_at), 'PPP')}</CardDescription>
             </CardHeader>
             <CardContent className="grow">
-              <p className="text-muted-foreground text-sm">{post.snippet}</p>
+              <p className="text-muted-foreground text-sm">{post.snippet}              </p>
             </CardContent>
             <CardFooter className="flex-col items-start gap-4">
               <div className="flex flex-wrap gap-2">

@@ -552,6 +552,34 @@ export async function upsertPost(formData: { id?: string, [key: string]: any }):
     return { data, error: null };
 }
 
+export async function uploadPostImage(formData: FormData): Promise<{ data: { publicUrl: string } | null, error: string | null }> {
+    const supabase = await createSupabaseServerClient(true);
+    const personalInfo = await getPersonalInfo();
+
+    if (!personalInfo) {
+        return { data: null, error: 'Personal info not found.' };
+    }
+
+    const imageFile = formData.get('image') as File | null;
+    if (!imageFile || imageFile.size === 0) {
+        return { data: null, error: 'No image provided.' };
+    }
+
+    const safeName = imageFile.name.replace(/[^a-zA-Z0-9.\-_]/g, '_');
+    const fileName = `${personalInfo.id}/${Date.now()}_${safeName}`;
+    const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('posts')
+        .upload(fileName, imageFile, { upsert: true });
+
+    if (uploadError) {
+        console.error('Storage Error:', uploadError);
+        return { data: null, error: 'Failed to upload image.' };
+    }
+
+    const { data: urlData } = supabase.storage.from('posts').getPublicUrl(uploadData.path);
+    return { data: { publicUrl: urlData.publicUrl }, error: null };
+}
+
 export async function deletePost(id: string): Promise<{ error: string | null }> {
     const supabase = await createSupabaseServerClient(true);
     const { error } = await supabase.from('posts').delete().match({ id });

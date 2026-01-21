@@ -153,7 +153,7 @@ export default function ProjectsAdminPage() {
       )}
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+        <DialogContent className="sm:max-w-7xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingProject ? 'Edit Project' : 'Add New Project'}</DialogTitle>
           </DialogHeader>

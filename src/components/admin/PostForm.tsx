@@ -6,19 +6,23 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
-import { SaveIcon } from 'lucide-react';
+import { ImageIcon, SaveIcon } from 'lucide-react';
 import type { Post } from '@/lib/supabase-types';
-import { upsertPost } from '@/lib/actions';
+import { upsertPost, uploadPostImage } from '@/lib/actions';
 import { useToast } from '@/hooks/use-toast';
-import { useState } from 'react';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import ReactMarkdown from 'react-markdown';
+import { type ChangeEvent, useRef, useState } from 'react';
 import remarkGfm from 'remark-gfm';
+// import remarkFootnotes from 'remark-footnotes';
+import remarkDeflist from 'remark-deflist';
+import remarkHeadingId from 'remark-heading-id';
+import remarkSupersub from 'remark-supersub';
+import rehypeHighlight from 'rehype-highlight';
+import rehypeSlug from 'rehype-slug';
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import { CustomSelectDate } from '../common/FormItem/CustomSelectDate';
-import { render } from 'react-dom';
+import MDEditor from '@uiw/react-md-editor';
+import { type TextAreaTextApi, type TextState } from '@uiw/react-md-editor';
 
 const formSchema = z.object({
   title: z.string().min(1, 'Title is required'),
@@ -37,6 +41,9 @@ interface PostFormProps {
 export function PostForm({ post, onSuccess }: PostFormProps) {
   const { toast } = useToast();
   const [isSaving, setIsSaving] = useState(false);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const editorApiRef = useRef<TextAreaTextApi | null>(null);
 
   const defaultValues: Partial<PostFormValues> = {
     title: post?.title || '',
@@ -50,7 +57,44 @@ export function PostForm({ post, onSuccess }: PostFormProps) {
     defaultValues,
   });
 
-  const contentValue = form.watch('content');
+  const handleImageCommand = (_state: TextState, api: TextAreaTextApi) => {
+    if (isUploadingImage) {
+      return;
+    }
+    editorApiRef.current = api;
+    fileInputRef.current?.click();
+  };
+
+  const handleImageFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) {
+      return;
+    }
+
+    setIsUploadingImage(true);
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+      const result = await uploadPostImage(formData);
+
+      if (result.error || !result.data) {
+        toast({ variant: 'destructive', title: 'Image upload failed', description: result.error || 'Unable to upload image.' });
+        return;
+      }
+
+      const imageMarkdown = `![${file.name}](${result.data.publicUrl})`;
+      if (editorApiRef.current) {
+        const nextState = editorApiRef.current.replaceSelection(imageMarkdown);
+        form.setValue('content', nextState.text, { shouldDirty: true });
+      } else {
+        const currentContent = form.getValues('content') ?? '';
+        form.setValue('content', `${currentContent}\n\n${imageMarkdown}\n`, { shouldDirty: true });
+      }
+    } finally {
+      setIsUploadingImage(false);
+      event.target.value = '';
+    }
+  };
 
   const onSubmit = async (values: PostFormValues) => {
     setIsSaving(true);
@@ -92,28 +136,51 @@ export function PostForm({ post, onSuccess }: PostFormProps) {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Content</FormLabel>
-              <Tabs defaultValue="write" className="w-full">
-                <TabsList className='mb-2'>
-                  <TabsTrigger value="write">Write</TabsTrigger>
-                  <TabsTrigger value="preview">Preview</TabsTrigger>
-                </TabsList>
-                <TabsContent value="write">
-                  <FormControl>
-                    <Textarea
-                      placeholder="Write your post content here. Supports Markdown."
-                      {...field}
-                      rows={15}
-                    />
-                  </FormControl>
-                </TabsContent>
-                <TabsContent value="preview">
-                  <div className="prose dark:prose-invert prose-sm min-h-[320px] w-full max-w-none rounded-md border p-4 bg-background">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                        {contentValue || 'Nothing to preview yet.'}
-                    </ReactMarkdown>
-                  </div>
-                </TabsContent>
-              </Tabs>
+              <FormControl>
+                <div className="rounded-md border">
+                  <MDEditor
+                    value={field.value ?? ''}
+                    onChange={(value) => field.onChange(value ?? '')}
+                    preview="live"
+                    height={360}
+                    textareaProps={{
+                      placeholder: 'Write your post content here. Supports Markdown.',
+                      disabled: isUploadingImage,
+                    }}
+                    commandsFilter={(command) => {
+                      if (command.name === 'image') {
+                        return {
+                          ...command,
+                          icon: <ImageIcon size={14} />,
+                          execute: handleImageCommand,
+                        };
+                      }
+                      return command;
+                    }}
+                    previewOptions={{
+                      remarkPlugins: [
+                        remarkGfm,
+                        // remarkFootnotes,
+                        remarkDeflist,
+                        remarkHeadingId,
+                        remarkSupersub,
+                      ],
+                      rehypePlugins: [
+                        rehypeSlug,
+                        [rehypeAutolinkHeadings, { behavior: 'wrap' }],
+                        rehypeHighlight,
+                      ],
+                    }}
+                  />
+                </div>
+              </FormControl>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleImageFileChange}
+              />
               <FormDescription>Dont know how to use markdown? Check out <a href="https://www.markdownguide.org/">Markdown Guide</a>.</FormDescription>
               <FormMessage />
             </FormItem>
