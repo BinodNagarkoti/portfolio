@@ -1,6 +1,6 @@
 /** Canonical site origin — required for metadataBase and sitemap URLs. */
 export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? 'https://binodfolio.com';
+  process.env.NEXT_PUBLIC_SITE_URL ?? 'https://binodnagarkoti.com.np';
 
 /** Route segments that must never be indexed or receive public SEO treatment. */
 export const ADMIN_BLOCKED_TERMS = [
