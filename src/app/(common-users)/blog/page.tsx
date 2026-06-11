@@ -51,7 +51,7 @@ const BlogListPage: React.FC = () => {
                 </div>
                 <p className="text-gray-700 dark:text-gray-300 mb-4">{post.tags}</p>
                 <a
-                    href={`/blog/${post.id}`}
+                    href={`/blog/${post.slug}`}
                     className="inline-block text-blue-600 dark:text-blue-400 hover:underline font-medium"
                 >
                     Read more &rarr;

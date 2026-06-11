@@ -1,43 +1,37 @@
 import type { MetadataRoute } from 'next';
-import { SITEMAP_PAGE_SIZE, SITE_URL } from '@/lib/seo/config';
-import { getCachedPublicRoutes } from '@/lib/seo/cache';
-import { calculatePriority } from '@/lib/seo/paths';
+import { SITE_URL } from '@/lib/seo/config';
+import { getPosts } from '@/lib/actions';
 
-export const dynamic = 'force-dynamic'
+export const dynamic = 'force-dynamic';
 
-export async function generateSitemaps() {
-  const routes = await getCachedPublicRoutes();
-  const pageCount = Math.max(1, Math.ceil(routes.length / SITEMAP_PAGE_SIZE));
-  return Array.from({ length: pageCount }, (_, id) => ({ id }));
-}
+const base = SITE_URL.replace(/\/$/, '');
 
-export default async function sitemap({
-  id,
-}: {
-  id: Promise<string>;
-}): Promise<MetadataRoute.Sitemap> {
-  try{
+const homePage: MetadataRoute.Sitemap[number] = {
+  url: base,
+  lastModified: new Date(),
+  changeFrequency: 'daily',
+  priority: 1,
+};
 
-    const resolvedId = Number(await id);
-    const routes = await getCachedPublicRoutes();
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  let blogEntries: MetadataRoute.Sitemap = [];
 
-  const start = resolvedId * SITEMAP_PAGE_SIZE;
-  const slice = routes.slice(start, start + SITEMAP_PAGE_SIZE);
-  const base = SITE_URL.replace(/\/$/, '');
-  
-  return slice.map((route) => ({
-    url: `${base}${route.path}`,
-    lastModified: route.lastmod,
-    changeFrequency: route.changeFrequency,
-    priority: calculatePriority(route.path),
-  }));
-}catch(error){
-  console.error('Failed to fetch audio data for sitemap:', error);
-  return [{
-    url: SITE_URL,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 1
-    }];
-}
+  try {
+    const result = await getPosts();
+
+    if (result.error) {
+      console.error('[sitemap] Failed to fetch blog posts:', result.error);
+    }
+
+    blogEntries = (result.data ?? []).map((post) => ({
+      url: `${base}/blog/${post.id}`,
+      lastModified: post.published_at ? new Date(post.published_at) : new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    }));
+  } catch (error) {
+    console.error('[sitemap] Unexpected error fetching blog posts:', error);
+  }
+
+  return [homePage, ...blogEntries];
 }
