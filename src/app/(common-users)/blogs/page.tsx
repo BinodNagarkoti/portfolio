@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { CalendarIcon, ArrowRightIcon, FileTextIcon } from 'lucide-react';
+import ShapeGrid from '@/components/reactbits/Backgrounds/ShapeGrid';
 
 const BlogListPage: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -30,59 +31,65 @@ const BlogListPage: React.FC = () => {
     fetchPosts();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="max-w-5xl mx-auto py-16 md:py-24 px-4 sm:px-6 lg:px-8">
-        <div className="mb-12 text-center">
-          <Skeleton className="h-5 w-32 mx-auto mb-3" />
-          <Skeleton className="h-10 w-64 mx-auto mb-4" />
-          <Skeleton className="h-5 w-96 mx-auto" />
-        </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <Card key={i} className="bg-card/50 backdrop-blur-xs">
-              <CardHeader>
-                <Skeleton className="h-6 w-full mb-2" />
-                <Skeleton className="h-4 w-32" />
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-4/5" />
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Skeleton className="h-6 w-16" />
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  if (posts.length === 0) {
-    return (
-      <div className="max-w-5xl mx-auto py-16 md:py-24 px-4 sm:px-6 lg:px-8">
-        <div className="text-center py-20">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-muted mb-6">
-            <FileTextIcon className="w-8 h-8 text-muted-foreground" />
-          </div>
-          <h2 className="text-2xl font-bold text-foreground mb-2">No posts yet</h2>
-          <p className="text-muted-foreground mb-6">
-            Articles are being written. Check back soon for new content.
-          </p>
-          <Button asChild variant="outline">
-            <Link href="/">Back to Home</Link>
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="max-w-5xl mx-auto py-16 md:py-24 px-4 sm:px-6 lg:px-8">
-      <div className="mb-12 text-center">
+    <div className="relative min-h-screen">
+      <div className="fixed inset-0 -z-10 pointer-events-none">
+        <ShapeGrid 
+          shape="square" 
+          squareSize={40} 
+          speed={0.5} 
+          vignetteDark='#120F17'
+          vignetteLight='rgba(254, 245, 254, 0.9)'
+          direction="diagonal"
+          hoverTrailAmount={0}
+          borderColor="rgba(128, 128, 128, 0.1)" 
+          hoverFillColor="rgba(128, 128, 128, 0.05)" 
+        />
+      </div>
+      <div className="max-w-5xl mx-auto py-16 md:py-24 px-4 sm:px-6 lg:px-8 relative z-10">
+        {loading ? (
+          <>
+            <div className="mb-12 text-center">
+              <Skeleton className="h-5 w-32 mx-auto mb-3" />
+              <Skeleton className="h-10 w-64 mx-auto mb-4" />
+              <Skeleton className="h-5 w-96 mx-auto" />
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <Card key={i} className="bg-card/50 backdrop-blur-xs">
+                  <CardHeader>
+                    <Skeleton className="h-6 w-full mb-2" />
+                    <Skeleton className="h-4 w-32" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      <Skeleton className="h-4 w-full" />
+                      <Skeleton className="h-4 w-4/5" />
+                    </div>
+                  </CardContent>
+                  <CardFooter>
+                    <Skeleton className="h-6 w-16" />
+                  </CardFooter>
+                </Card>
+              ))}
+            </div>
+          </>
+        ) : posts.length === 0 ? (
+          <div className="text-center py-20">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-muted mb-6">
+              <FileTextIcon className="w-8 h-8 text-muted-foreground" />
+            </div>
+            <h2 className="text-2xl font-bold text-foreground mb-2">No posts yet</h2>
+            <p className="text-muted-foreground mb-6">
+              Articles are being written. Check back soon for new content.
+            </p>
+            <Button asChild variant="outline">
+              <Link href="/">Back to Home</Link>
+            </Button>
+          </div>
+        ) : (
+          <>
+            <div className="mb-12 text-center">
         <p className="text-base font-semibold uppercase tracking-wider text-primary mb-2 font-headline">
           Articles & Tutorials
         </p>
@@ -155,6 +162,9 @@ const BlogListPage: React.FC = () => {
             </CardFooter>
           </Card>
         ))}
+      </div>
+          </>
+        )}
       </div>
     </div>
   );
