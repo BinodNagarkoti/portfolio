@@ -7,23 +7,55 @@ import { Badge } from '@/components/ui/badge';
 import { format, parseISO } from 'date-fns';
 import { MarkdownPreview } from '@/components/common/MarkdownPreview';
 import type { Metadata } from 'next';
-import {cache} from 'react';
+import { cache } from 'react';
+import {
+  SEO_DESCRIPTION_MAX,
+  SEO_TITLE_MAX,
+  SITE_NAME,
+  SITE_URL,
+} from '@/lib/seo/config';
+import { resolveCanonicalUrl, truncateForSeo } from '@/lib/seo/paths';
 
 type Props = {
   params: Promise<{ slug: string }>;
 };
+
 const getPostDetails = cache(getPostBySlug);
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { data: post } = await getPostDetails((await params).slug);
   if (!post) {
     return {
       title: 'Post Not Found',
+      robots: { index: false, follow: false },
     };
   }
 
+  const title = truncateForSeo(`${post.title} | Blog`, SEO_TITLE_MAX);
+  const description = truncateForSeo(post.snippet ?? post.content, SEO_DESCRIPTION_MAX);
+  const canonical = resolveCanonicalUrl(`/blog/${post.slug}`);
+
   return {
-    title: `${post.title} | Blog`,
-    description: post.snippet,
+    metadataBase: new URL(SITE_URL),
+    title,
+    description,
+    alternates: { canonical },
+    openGraph: {
+      type: 'article',
+      url: canonical,
+      title,
+      description,
+      siteName: SITE_NAME,
+      publishedTime: post.published_at,
+      modifiedTime: post.updated_at,
+      tags: post.tags ?? undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+    },
+    robots: { index: true, follow: true },
   };
 }
 
@@ -34,8 +66,31 @@ export default async function BlogPostPage({ params }: Props) {
     notFound();
   }
 
+  const canonical = `${SITE_URL}/blog/${post.slug}`;
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.snippet ?? post.content,
+    author: {
+      '@type': 'Person',
+      name: SITE_NAME,
+    },
+    datePublished: post.published_at,
+    dateModified: post.updated_at,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': canonical,
+    },
+    keywords: post.tags?.join(', '),
+  };
+
   return (
     <SectionWrapper>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="max-w-4xl mx-auto pt-16">
         <Card className="bg-card/50 backdrop-blur-xs">
           <CardHeader className="text-center border-b pb-6">

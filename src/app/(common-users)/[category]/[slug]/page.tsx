@@ -9,6 +9,7 @@ import { getCachedCategoryContent } from '@/lib/seo/cache';
 import {
   SEO_DESCRIPTION_MAX,
   SEO_TITLE_MAX,
+  SITE_NAME,
   SITE_URL,
 } from '@/lib/seo/config';
 import {
@@ -93,8 +94,31 @@ export default async function CategorySlugPage({ params }: PageProps) {
     notFound();
   }
 
+  const canonical = resolveCanonicalUrl(`/${category}/${slug}`);
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.snippet ?? post.content,
+    author: {
+      '@type': 'Person',
+      name: SITE_NAME,
+    },
+    datePublished: post.published_at,
+    dateModified: post.updated_at,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': canonical,
+    },
+    keywords: post.tags?.join(', '),
+  };
+
   return (
     <SectionWrapper>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="max-w-4xl mx-auto pt-16">
         <Card className="bg-card/50 backdrop-blur-xs">
           <CardHeader className="text-center border-b pb-6">

@@ -2,6 +2,13 @@
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? 'https://binodnagarkoti.com.np';
 
+/** Site name for OpenGraph, Twitter, and AI crawlers. */
+export const SITE_NAME = 'Binod Nagarkoti';
+
+/** Site description for AI crawlers and fallback metadata. */
+export const SITE_DESCRIPTION =
+  'Personal portfolio and blog of Binod Nagarkoti, featuring articles on technology, software development, and professional insights.';
+
 /** Route segments that must never be indexed or receive public SEO treatment. */
 export const ADMIN_BLOCKED_TERMS = [
   'admin',
