@@ -78,8 +78,8 @@ const Navbar = ({ personalInfo }: { personalInfo: PersonalInfo | null }) => {
 
   const getNavClasses = () => {
     switch (navStyle) {
-      case 'stage1': return 'w-[90%] px-6';
-      case 'stage2': return 'w-[82.5%] px-5';
+      case 'stage1': return 'w-[80%] px-6';
+      case 'stage2': return 'w-[78.5%] px-5';
       case 'stage3': return 'w-[75%] px-4';
       case 'stage4': return 'w-[67.5%] px-3';
       case 'stage5': return 'w-[60%] px-2';
@@ -125,14 +125,14 @@ const Navbar = ({ personalInfo }: { personalInfo: PersonalInfo | null }) => {
         <Link
           href="/#"
           className={cn(
-            "relative flex items-center justify-center text-center overflow-hidden rounded-lg shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-[0_0_16px_4px_rgba(var(--accent-rgb),0.5)] ring-1 ring-border/50 bg-gradient-to-br from-primary/10 to-accent/10 hover:rotate-12",
+            "relative flex items-center justify-center text-center overflow-hidden rounded-lg shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-[0_0_16px_4px_rgba(var(--accent-rgb),0.5)] ring-1 ring-border/50 bg-linear-to-br from-primary/10 to-accent/10 hover:rotate-12",
             "h-9 w-9 text-sm"
           )}
         >
           <span className="font-bold text-foreground">{initials}</span>
         </Link>
 
-        <div className={cn("flex items-center gap-0.5")}>
+        <div className="flex-1 flex items-center justify-center gap-1 sm:gap-2 md:gap-4 px-2">
           {navItems.map((item) => (
             <Button
               key={item.name}
@@ -147,7 +147,9 @@ const Navbar = ({ personalInfo }: { personalInfo: PersonalInfo | null }) => {
             </Button>
           ))}
 
-          {/* Theme Switcher */}
+          
+        </div>
+        {/* Theme Switcher */}
           <Button
             variant="ghost"
             size="icon"
@@ -160,7 +162,6 @@ const Navbar = ({ personalInfo }: { personalInfo: PersonalInfo | null }) => {
           >
             {mounted ? (dark ? sunIcon : moonIcon) : moonIcon}
           </Button>
-        </div>
       </nav>
 
       {/* Mobile Nav */}

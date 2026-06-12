@@ -16,31 +16,31 @@ const HeroSection = ({ personalInfo }: { personalInfo: PersonalInfo | null }) =>
                 <div className="grid md:grid-cols-2 gap-12 items-center">
                     <div className="space-y-8 order-2 md:order-1">
                         <div className='space-y-4' >
-                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary animate-in fade-in slide-in-from-bottom-4 duration-700"><span className="inline-block w-2 h-2 rounded-full bg-primary animate-pulse"></span><span className="text-sm font-medium">Hi，Iam</span></div>
-
-                            <div className="text-5xl sm:text-6xl lg:text-7xl font-bold">
-                                <ShinyText text={personalInfo?.name ?? ''} disabled={false} speed={3} />
+                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100/80 dark:bg-slate-800/50 backdrop-blur-md border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                                <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                <span className="text-sm font-medium">Hi, I am</span>
                             </div>
-                            <p className="text-2xl sm:text-3xl lg:text-4xl text-muted-foreground font-medium animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
+
+                            <div className="text-5xl sm:text-6xl lg:text-7xl font-bold text-slate-900 dark:text-white">
+                                <ShinyText text={personalInfo?.name ?? ''} disabled={false} speed={3} className="text-slate-900 dark:text-white" />
+                            </div>
+                            <p className="text-2xl sm:text-3xl lg:text-4xl text-slate-600 dark:text-slate-300 font-medium animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
                                 {personalInfo?.title ?? ''}
                             </p>
                         </div>
-                        <p className="mt-4 max-w-lg text-lg text-muted-foreground/80 mx-auto md:mx-0">
+                        <p className="mt-4 max-w-lg text-lg text-slate-600 dark:text-slate-400 mx-auto md:mx-0 leading-relaxed">
                             {personalInfo?.bio ?? ''}
                         </p>
 
-                        <div className="flex flex-wrap gap-3 pt-2 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-400">
-                            <span className="px-4 py-2 text-sm rounded-full bg-primary/10 text-primary border border-primary/20">React</span>
-                            <span className="px-4 py-2 text-sm rounded-full bg-primary/10 text-primary border border-primary/20">Next.js</span>
-                            <span className="px-4 py-2 text-sm rounded-full bg-primary/10 text-primary border border-primary/20">Tailwind CSS</span>
-                            <span className="px-4 py-2 text-sm rounded-full bg-primary/10 text-primary border border-primary/20">Vite</span>
-                            <span className="px-4 py-2 text-sm rounded-full bg-primary/10 text-primary border border-primary/20">Typescript</span>
-                            <span className="px-4 py-2 text-sm rounded-full bg-primary/10 text-primary border border-primary/20">Supabase</span>
-                            <span className="px-4 py-2 text-sm rounded-full bg-primary/10 text-primary border border-primary/20">Stripe</span>
-                            <span className="px-4 py-2 text-sm rounded-full bg-primary/10 text-primary border border-primary/20">Framer Motion</span>
-                            <span className="px-4 py-2 text-sm rounded-full bg-primary/10 text-primary border border-primary/20">Shadcn UI</span>
-                            <span className="px-4 py-2 text-sm rounded-full bg-primary/10 text-primary border border-primary/20">Tailwind CSS</span>
-                            <span className="px-4 py-2 text-sm rounded-full bg-primary/10 text-primary border border-primary/20">Typescript</span>
+                        <div className="flex flex-wrap gap-2 sm:gap-3 pt-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-400">
+                            {['React', 'Next.js', 'Tailwind CSS', 'Vite', 'TypeScript', 'Supabase', 'Stripe', 'Framer Motion', 'Shadcn UI'].map((tech) => (
+                                <span 
+                                    key={tech}
+                                    className="px-3 py-1.5 text-xs sm:text-sm font-medium rounded-full border backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 bg-slate-100/80 text-slate-700 border-slate-200 hover:bg-slate-200/80 hover:border-slate-300 dark:bg-slate-800/50 dark:text-slate-200 dark:border-slate-700 dark:hover:bg-slate-700/50 dark:hover:border-slate-600 dark:hover:shadow-[0_0_15px_rgba(255,255,255,0.05)]"
+                                >
+                                    {tech}
+                                </span>
+                            ))}
                         </div>
                         <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
                             <Button size="lg" asChild>

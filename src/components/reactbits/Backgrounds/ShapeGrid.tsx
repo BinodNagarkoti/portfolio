@@ -16,6 +16,8 @@ interface ShapeGridProps {
   hoverFillColor?: CanvasStrokeStyle;
   shape?: 'square' | 'hexagon' | 'circle' | 'triangle';
   hoverTrailAmount?: number;
+  vignetteLight?: string;
+  vignetteDark?: string;
 }
 
 const ShapeGrid: React.FC<ShapeGridProps> = ({
@@ -25,8 +27,15 @@ const ShapeGrid: React.FC<ShapeGridProps> = ({
   squareSize = 40,
   hoverFillColor = '#222',
   shape = 'square',
-  hoverTrailAmount = 0
+  hoverTrailAmount = 0,
+  vignetteLight = 'rgba(255, 255, 255, 0.6)',
+  vignetteDark = '#120F17'
 }) => {
+  const getIsDark = () => {
+    if (typeof document === 'undefined') return true;
+    return document.documentElement.classList.contains('dark');
+  };
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const requestRef = useRef<number | null>(null);
   const numSquaresX = useRef<number>(0);
@@ -208,6 +217,7 @@ const ShapeGrid: React.FC<ShapeGridProps> = ({
         }
       }
 
+      const isDark = getIsDark();
       const gradient = ctx.createRadialGradient(
         canvas.width / 2,
         canvas.height / 2,
@@ -217,7 +227,7 @@ const ShapeGrid: React.FC<ShapeGridProps> = ({
         Math.sqrt(canvas.width ** 2 + canvas.height ** 2) / 2
       );
       gradient.addColorStop(0, 'rgba(0, 0, 0, 0)');
-      gradient.addColorStop(1, '#120F17');
+      gradient.addColorStop(1, isDark ? vignetteDark : vignetteLight);
 
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -400,7 +410,7 @@ const ShapeGrid: React.FC<ShapeGridProps> = ({
       canvas.removeEventListener('mousemove', handleMouseMove);
       canvas.removeEventListener('mouseleave', handleMouseLeave);
     };
-  }, [direction, speed, borderColor, hoverFillColor, squareSize, shape, hoverTrailAmount]);
+  }, [direction, speed, borderColor, hoverFillColor, squareSize, shape, hoverTrailAmount, vignetteLight, vignetteDark]);
 
   return <canvas ref={canvasRef} className="w-full h-full border-none block"></canvas>;
 };

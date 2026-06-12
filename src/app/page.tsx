@@ -12,22 +12,14 @@ import BlogSection from '@/components/sections/BlogSection';
 import EducationSection from '@/components/sections/EducationSection';
 import Squares from '@/components/reactbits/Backgrounds/Squares/Squares';
 import Navbar from '@/components/layout/Navbar';
-import ShapeGrid from '@/components/reactbits/Backgrounds/ShapeGrid';
+import ThemeShapeGrid from '@/components/reactbits/Backgrounds/ThemeShapeGrid';
 
 export default async function Home() {
     const personalInfo = await getPersonalInfo();
     return (
         <div className="relative min-h-screen justify-center items-center w-full mt-10">
             <div className="fixed inset-0 -z-10">
-                <ShapeGrid
-                speed={0.5}
-                squareSize={40}
-                direction='diagonal'
-                borderColor="#2F293A"
-                hoverFillColor='#222'
-                shape='square'
-                hoverTrailAmount={0}
-                />
+                <ThemeShapeGrid />
             </div>
             <Navbar personalInfo={personalInfo} />
             <HeroSection personalInfo={personalInfo} />
