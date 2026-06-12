@@ -545,8 +545,8 @@ export async function upsertPost(formData: { id?: string, [key: string]: any }):
     }
 
     revalidatePath('/');
-    revalidatePath('/blog'); // Revalidate the blog index
-    revalidatePath(`/blog/${slug}`); // Revalidate the specific post page
+    revalidatePath('/blogs'); // Revalidate the blog index
+    revalidatePath(`/blogs/${slug}`); // Revalidate the specific post page
     revalidatePath('/admin/dashboard/blog');
 
     return { data, error: null };

@@ -128,7 +128,7 @@ export default function BlogAdminPage() {
                   <TableCell className="text-right">
                     {post.published_at && (
                       <Button variant="ghost" size="icon" asChild>
-                        <Link href={`/blog/${post.slug}`} target="_blank" title="View live post">
+                        <Link href={`/blogs/${post.slug}`} target="_blank" title="View live post">
                           <GlobeIcon className="h-4 w-4" />
                         </Link>
                       </Button>

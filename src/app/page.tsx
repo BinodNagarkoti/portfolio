@@ -12,12 +12,23 @@ import BlogSection from '@/components/sections/BlogSection';
 import EducationSection from '@/components/sections/EducationSection';
 import Squares from '@/components/reactbits/Backgrounds/Squares/Squares';
 import Navbar from '@/components/layout/Navbar';
+import ShapeGrid from '@/components/reactbits/Backgrounds/ShapeGrid';
 
 export default async function Home() {
     const personalInfo = await getPersonalInfo();
     return (
-        <>
-            <Squares className="absolute inset-0 -z-10 size-full" speed={0.1} squareSize={30} borderColor='hsl(var(--border) / 0.1)' hoverFillColor='hsl(var(--accent) / 0.05)' />
+        <div className="relative min-h-screen justify-center items-center w-full mt-10">
+            <div className="fixed inset-0 -z-10">
+                <ShapeGrid
+                speed={0.5}
+                squareSize={40}
+                direction='diagonal'
+                borderColor="#2F293A"
+                hoverFillColor='#222'
+                shape='square'
+                hoverTrailAmount={0}
+                />
+            </div>
             <Navbar personalInfo={personalInfo} />
             <HeroSection personalInfo={personalInfo} />
             <AboutSection />
@@ -29,6 +40,6 @@ export default async function Home() {
             <BlogSection />
             <ContactSection personalInfo={personalInfo} />
 
-        </>
+        </div>
     );
 }

@@ -9,7 +9,7 @@ ${SITE_DESCRIPTION}
 Base URL: ${SITE_URL}
 
 ## Content Sources
-- Blog Posts: ${SITE_URL}/blog/[slug]
+- Blog Posts: ${SITE_URL}/blogs/[slug]
 - Sitemap: ${SITE_URL}/sitemap.xml
 
 ## Crawling Instructions

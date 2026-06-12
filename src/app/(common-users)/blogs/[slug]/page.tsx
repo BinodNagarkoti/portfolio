@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const title = truncateForSeo(`${post.title} | Blog`, SEO_TITLE_MAX);
   const description = truncateForSeo(post.snippet ?? post.content, SEO_DESCRIPTION_MAX);
-  const canonical = resolveCanonicalUrl(`/blog/${post.slug}`);
+  const canonical = resolveCanonicalUrl(`/blogs/${post.slug}`);
 
   return {
     metadataBase: new URL(SITE_URL),
@@ -66,7 +66,7 @@ export default async function BlogPostPage({ params }: Props) {
     notFound();
   }
 
-  const canonical = `${SITE_URL}/blog/${post.slug}`;
+  const canonical = `${SITE_URL}/blogs/${post.slug}`;
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',

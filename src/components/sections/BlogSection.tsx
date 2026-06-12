@@ -33,7 +33,7 @@ const BlogSection = async () => {
                 ))}
               </div>
               <Button variant="link" asChild className="p-0 h-auto">
-                <Link href={`/blog/${post.slug}`}>Read More</Link>
+                <Link href={`/blogs/${post.slug}`}>Read More</Link>
               </Button>
             </CardFooter>
           </Card>

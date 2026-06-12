@@ -12,7 +12,8 @@ type LegacyRedirect = {
 
 const LEGACY_REDIRECTS: LegacyRedirect[] = [
   { from: '/home', to: '/', permanent: true },
-  { from: '/posts', to: '/blog', permanent: true },
+  { from: '/posts', to: '/blogs', permanent: true },
+  { from: '/blog', to: '/blogs', permanent: true },
 ];
 
 function normalizePublicPathname(pathname: string): string {

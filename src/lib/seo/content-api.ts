@@ -14,13 +14,13 @@ export interface PublicRouteEntry {
 export async function fetchPublicRoutes(): Promise<PublicRouteEntry[]> {
   const staticRoutes: PublicRouteEntry[] = [
     { path: '/', lastmod: new Date().toISOString(), changeFrequency: 'weekly' },
-    { path: '/blog', lastmod: new Date().toISOString(), changeFrequency: 'daily' },
+    { path: '/blogs', lastmod: new Date().toISOString(), changeFrequency: 'daily' },
   ];
 
   const posts = await fetchPublicPosts();
   const blogRoutes: PublicRouteEntry[] =
     posts.map((post) => ({
-      path: `/blog/${post.slug}`,
+      path: `/blogs/${post.slug}`,
       lastmod: post.updated_at ?? post.created_at,
       changeFrequency: 'weekly' as const,
     })) ?? [];
