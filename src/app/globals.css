@@ -140,3 +140,107 @@
     scroll-behavior: smooth;
   }
 }
+
+@layer components {
+  .prose-container {
+    @apply bg-card/60 dark:bg-card/40 backdrop-blur-sm border border-border/50 rounded-2xl shadow-sm;
+    @apply px-6 py-8 sm:px-10 sm:py-10;
+  }
+
+  .article-content {
+    @apply space-y-6;
+  }
+
+  .article-content h1 {
+    @apply text-3xl font-bold font-headline text-foreground mt-0 mb-4;
+  }
+
+  .article-content h2 {
+    @apply text-2xl font-semibold font-headline text-foreground mt-10 mb-4;
+  }
+
+  .article-content h3 {
+    @apply text-xl font-semibold font-headline text-foreground mt-8 mb-3;
+  }
+
+  .article-content h4 {
+    @apply text-lg font-semibold text-foreground mt-6 mb-2;
+  }
+
+  .article-content p {
+    @apply text-base leading-7 text-foreground/90 mb-4;
+  }
+
+  .article-content a {
+    @apply font-medium underline-offset-4 text-foreground/90 hover:text-primary;
+  }
+
+  .article-content ul {
+    @apply list-disc space-y-2 pl-6 mb-4;
+  }
+
+  .article-content ol {
+    @apply list-decimal space-y-2 pl-6 mb-4;
+  }
+
+  .article-content li {
+    @apply leading-7 text-foreground/90;
+  }
+
+  .article-content li > ul,
+  .article-content li > ol {
+    @apply mt-2 mb-0;
+  }
+
+  .article-content blockquote {
+    @apply border-l-2 border-primary/40 pl-4 italic text-foreground/80 my-6;
+  }
+
+  .article-content hr {
+    @apply border-border/50 my-8;
+  }
+
+  .article-content img {
+    @apply my-6 max-h-[520px] w-full rounded-lg border border-border/50 object-contain shadow-sm;
+  }
+
+  .article-content code:not(pre code) {
+    @apply rounded bg-muted px-1.5 py-0.5 font-mono text-sm;
+  }
+
+  .article-content pre {
+    @apply my-6 overflow-x-auto rounded-lg border border-border/30 bg-muted/50 p-4 text-sm leading-6;
+  }
+
+  .article-content table {
+    @apply w-full border-collapse overflow-hidden rounded-lg border border-border/50 my-6;
+  }
+
+  .article-content thead {
+    @apply bg-muted/60;
+  }
+
+  .article-content th {
+    @apply border border-border/50 px-4 py-2.5 text-sm font-semibold text-foreground;
+  }
+
+  .article-content td {
+    @apply border border-border/50 px-4 py-2.5 text-sm text-foreground/90 align-top;
+  }
+
+  .article-content mark {
+    @apply bg-yellow-200/70 dark:bg-yellow-400/30 px-1 rounded;
+  }
+
+  .article-content dl {
+    @apply my-6 space-y-2;
+  }
+
+  .article-content dt {
+    @apply font-semibold text-foreground;
+  }
+
+  .article-content dd {
+    @apply ml-4 text-foreground/80;
+  }
+}

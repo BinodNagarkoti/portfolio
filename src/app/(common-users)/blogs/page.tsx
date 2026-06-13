@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { CalendarIcon, ArrowRightIcon, FileTextIcon } from 'lucide-react';
-import ShapeGrid from '@/components/reactbits/Backgrounds/ShapeGrid';
+import ThemeShapeGrid from '@/components/reactbits/Backgrounds/ThemeShapeGrid';
 
 const BlogListPage: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -34,17 +34,7 @@ const BlogListPage: React.FC = () => {
   return (
     <div className="relative min-h-screen">
       <div className="fixed inset-0 -z-10 pointer-events-none">
-        <ShapeGrid 
-          shape="square" 
-          squareSize={40} 
-          speed={0.5} 
-          vignetteDark='#120F17'
-          vignetteLight='rgba(254, 245, 254, 0.9)'
-          direction="diagonal"
-          hoverTrailAmount={0}
-          borderColor="rgba(128, 128, 128, 0.1)" 
-          hoverFillColor="rgba(128, 128, 128, 0.05)" 
-        />
+        <ThemeShapeGrid />
       </div>
       <div className="max-w-5xl mx-auto py-16 md:py-24 px-4 sm:px-6 lg:px-8 relative z-10">
         {loading ? (

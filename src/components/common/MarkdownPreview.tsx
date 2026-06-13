@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import MDEditor from '@uiw/react-md-editor';
 import remarkGfm from 'remark-gfm';
 import remarkDeflist from 'remark-deflist';
@@ -13,7 +14,36 @@ type MarkdownPreviewProps = {
   source: string;
 };
 
+function getTheme() {
+  if (typeof document === 'undefined') return 'dark';
+  const saved = localStorage.getItem('theme');
+  if (saved === 'light') return 'light';
+  if (saved === 'dark') return 'dark';
+  return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+}
+
 export function MarkdownPreview({ source }: MarkdownPreviewProps) {
+  const [colorMode, setColorMode] = useState<'light' | 'dark'>(getTheme());
+
+  useEffect(() => {
+    setColorMode(getTheme());
+    const observer = new MutationObserver(() => setColorMode(getTheme()));
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+
+    const onStorage = () => setColorMode(getTheme());
+    window.addEventListener('storage', onStorage);
+    const origSetItem = localStorage.setItem;
+    localStorage.setItem = function (...args) {
+      origSetItem.apply(this, args);
+      if (args[0] === 'theme') onStorage();
+    };
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('storage', onStorage);
+    };
+  }, []);
+
   return (
     <MDEditor
       value={source}
@@ -22,6 +52,7 @@ export function MarkdownPreview({ source }: MarkdownPreviewProps) {
       visibleDragbar={false}
       height="100lvh"
       enableScroll={false}
+      data-color-mode={colorMode}
       previewOptions={{
         remarkPlugins: [
           remarkGfm,

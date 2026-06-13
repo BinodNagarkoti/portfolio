@@ -1,8 +1,6 @@
 
 import { notFound } from 'next/navigation';
 import { getPostBySlug } from '@/lib/actions';
-import SectionWrapper from '@/components/common/SectionWrapper';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { format, parseISO } from 'date-fns';
 import { MarkdownPreview } from '@/components/common/MarkdownPreview';
@@ -15,6 +13,9 @@ import {
   SITE_URL,
 } from '@/lib/seo/config';
 import { resolveCanonicalUrl, truncateForSeo } from '@/lib/seo/paths';
+import ThemeShapeGrid from '@/components/reactbits/Backgrounds/ThemeShapeGrid';
+import { ArrowLeftIcon, CalendarIcon, ClockIcon } from 'lucide-react';
+import Link from 'next/link';
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -59,6 +60,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+const estimateReadTime = (content: string): number => {
+  const wordsPerMinute = 200;
+  const wordCount = content.split(/\s+/).length;
+  return Math.max(1, Math.ceil(wordCount / wordsPerMinute));
+};
+
 export default async function BlogPostPage({ params }: Props) {
   const { data: post } = await getPostDetails((await params).slug);
 
@@ -66,6 +73,7 @@ export default async function BlogPostPage({ params }: Props) {
     notFound();
   }
 
+  const readTime = estimateReadTime(post.content);
   const canonical = `${SITE_URL}/blogs/${post.slug}`;
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -86,31 +94,66 @@ export default async function BlogPostPage({ params }: Props) {
   };
 
   return (
-    <SectionWrapper>
+    <div className="relative min-h-screen">
+      <div className="fixed inset-0 -z-10 pointer-events-none">
+        <ThemeShapeGrid />
+      </div>
+
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className="max-w-4xl mx-auto pt-16">
-        <Card className="bg-card/50 backdrop-blur-xs">
-          <CardHeader className="text-center border-b pb-6">
-            <CardTitle className="text-4xl md:text-5xl font-bold font-headline">{post.title}</CardTitle>
-            <CardDescription className="pt-2">
-              Posted on {format(parseISO(post.created_at), 'PPP')}
-            </CardDescription>
-            <div className="flex justify-center flex-wrap gap-2 pt-4">
+
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16">
+        <Link
+          href="/blogs"
+          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8 group"
+        >
+          <ArrowLeftIcon className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
+          Back to Blog
+        </Link>
+
+        <article className="prose-container">
+          <header className="mb-10 pb-8 border-b border-border/50">
+            <div className="flex flex-wrap gap-2 mb-4">
               {post.tags?.map(tag => (
-                <Badge key={tag} variant="secondary">{tag}</Badge>
+                <Badge key={tag} variant="secondary" className="font-medium">{tag}</Badge>
               ))}
             </div>
-          </CardHeader>
-          <CardContent className="p-4 md:p-8">
-            <article className="prose prose-lg dark:prose-invert max-w-none mx-auto">
-              <MarkdownPreview source={post.content} />
-            </article>
-          </CardContent>
-        </Card>
+
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold font-headline text-foreground leading-tight mb-4">
+              {post.title}
+            </h1>
+
+            <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+              <span className="inline-flex items-center gap-1.5">
+                <CalendarIcon className="w-4 h-4" />
+                <time dateTime={post.published_at ?? post.created_at}>
+                  {format(parseISO(post.published_at ?? post.created_at), 'MMMM d, yyyy')}
+                </time>
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <ClockIcon className="w-4 h-4" />
+                {readTime} min read
+              </span>
+            </div>
+          </header>
+
+          <div className="article-content">
+            <MarkdownPreview source={post.content} />
+          </div>
+
+          <footer className="mt-12 pt-8 border-t border-border/50">
+            <Link
+              href="/blogs"
+              className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors group"
+            >
+              <ArrowLeftIcon className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
+              More Articles
+            </Link>
+          </footer>
+        </article>
       </div>
-    </SectionWrapper>
+    </div>
   );
 }
