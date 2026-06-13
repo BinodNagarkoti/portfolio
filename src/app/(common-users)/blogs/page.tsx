@@ -24,6 +24,8 @@ const BlogListPage: React.FC = () => {
         if (result.error) {
           console.error(result.error);
         }
+      }catch(error){
+        console.error(error);
       } finally {
         setLoading(false);
       }
@@ -98,7 +100,7 @@ const BlogListPage: React.FC = () => {
             className="group relative flex flex-col bg-card/50 backdrop-blur-xs border-border/50 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 overflow-hidden"
             style={{ animationDelay: `${index * 0.1}s` }}
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="absolute inset-0 bg-linear-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             
             <CardHeader className="relative z-10 pb-3">
               <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import MDEditor from '@uiw/react-md-editor';
 import remarkGfm from 'remark-gfm';
 import remarkDeflist from 'remark-deflist';
@@ -12,9 +12,10 @@ import rehypeHighlight from 'rehype-highlight';
 
 type MarkdownPreviewProps = {
   source: string;
+  fullHeight?: boolean;
 };
 
-function getTheme() {
+function getTheme(): 'light' | 'dark' {
   if (typeof document === 'undefined') return 'dark';
   const saved = localStorage.getItem('theme');
   if (saved === 'light') return 'light';
@@ -22,8 +23,9 @@ function getTheme() {
   return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
 }
 
-export function MarkdownPreview({ source }: MarkdownPreviewProps) {
-  const [colorMode, setColorMode] = useState<'light' | 'dark'>(getTheme());
+export function MarkdownPreview({ source, fullHeight = false }: MarkdownPreviewProps) {
+  const [colorMode, setColorMode] = useState<'light' | 'dark' | undefined>(undefined);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setColorMode(getTheme());
@@ -44,159 +46,188 @@ export function MarkdownPreview({ source }: MarkdownPreviewProps) {
     };
   }, []);
 
+  useEffect(() => {
+    if (fullHeight && containerRef.current) {
+      const previewEl = containerRef.current.querySelector<HTMLDivElement>('.w-md-editor-preview');
+      if (previewEl) {
+        previewEl.style.height = 'auto';
+        previewEl.style.overflow = 'visible';
+      }
+      const contentEl = containerRef.current.querySelector<HTMLDivElement>('.w-md-editor-content');
+      if (contentEl) {
+        contentEl.style.height = 'auto';
+      }
+    }
+  }, [fullHeight]);
+
+  if (colorMode === undefined) {
+    return (
+      <div className="bg-card/60 dark:bg-card/40 rounded">
+        <div className="px-4 py-8 sm:px-6 sm:py-10 space-y-6 animate-pulse">
+          <div className="h-4 bg-muted rounded w-3/4" />
+          <div className="h-4 bg-muted rounded w-full" />
+          <div className="h-4 bg-muted rounded w-5/6" />
+          <div className="h-4 bg-muted rounded w-2/3" />
+          <div className="h-4 bg-muted rounded w-full" />
+          <div className="h-4 bg-muted rounded w-4/5" />
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <MDEditor
-      value={source}
-      preview="preview"
-      hideToolbar
-      visibleDragbar={false}
-      height="100lvh"
-      enableScroll={false}
-      data-color-mode={colorMode}
-      previewOptions={{
-        remarkPlugins: [
-          remarkGfm,
-          remarkDeflist,
-          remarkHeadingId,
-          remarkSupersub,
-        ],
-        rehypePlugins: [
-          rehypeSlug,
-          [rehypeAutolinkHeadings, { behavior: 'wrap' }],
-          rehypeHighlight,
-        ],
-        components: {
-          h1: ({ children, ...props }) => (
-            <h1 className="scroll-mt-24 text-4xl font-bold" {...props}>{children}</h1>
-          ),
-          h2: ({ children, ...props }) => (
-            <h2 className="scroll-mt-24 text-3xl font-semibold" {...props}>{children}</h2>
-          ),
-          h3: ({ children, ...props }) => (
-            <h3 className="scroll-mt-24 text-2xl font-semibold" {...props}>{children}</h3>
-          ),
-          h4: ({ children, ...props }) => (
-            <h4 className="scroll-mt-24 text-xl font-semibold" {...props}>{children}</h4>
-          ),
-          h5: ({ children, ...props }) => (
-            <h5 className="scroll-mt-24 text-lg font-semibold" {...props}>{children}</h5>
-          ),
-          h6: ({ children, ...props }) => (
-            <h6 className="scroll-mt-24 text-base font-semibold uppercase tracking-wide" {...props}>{children}</h6>
-          ),
-          p: ({ children, ...props }) => (
-            <p className="leading-7 text-foreground/90" {...props}>{children}</p>
-          ),
-          a: ({ href, children, ...props }) => {
-            const isExternal = !!href && /^https?:\/\//i.test(href);
-            return (
-              <a
-                href={href}
-                className="font-medium underline-offset-4 hover:underline"
-                rel={isExternal ? 'noreferrer noopener' : undefined}
-                target={isExternal ? '_blank' : undefined}
-                {...props}
-              >
-                {children}
-              </a>
-            );
-          },
-          img: ({ alt, ...props }) => (
-            <img
-              alt={alt ?? ''}
-              className="my-6 max-h-[520px] w-full rounded-md border object-contain"
-              loading="lazy"
-              {...props}
-            />
-          ),
-          ul: ({ children, ...props }) => (
-            <ul className="list-disc space-y-2 pl-6" {...props}>{children}</ul>
-          ),
-          ol: ({ children, ...props }) => (
-            <ol className="list-decimal space-y-2 pl-6" {...props}>{children}</ol>
-          ),
-          li: ({ children, ...props }) => (
-            <li className="leading-7" {...props}>{children}</li>
-          ),
-          blockquote: ({ children, ...props }) => (
-            <blockquote className="border-l-2 border-foreground/30 pl-4 italic text-foreground/80" {...props}>
-              {children}
-            </blockquote>
-          ),
-          hr: (props) => <hr className="my-8 border-foreground/20" {...props} />,
-          table: ({ children, ...props }) => (
-            <div className="my-6 w-full overflow-x-auto">
-              <table className="w-full border-collapse text-left" {...props}>{children}</table>
-            </div>
-          ),
-          thead: ({ children, ...props }) => (
-            <thead className="bg-muted/50" {...props}>{children}</thead>
-          ),
-          th: ({ children, ...props }) => (
-            <th className="border px-3 py-2 text-sm font-semibold" {...props}>{children}</th>
-          ),
-          td: ({ children, ...props }) => (
-            <td className="border px-3 py-2 text-sm align-top" {...props}>{children}</td>
-          ),
-          code: ({ className, children, ...props }) => {
-            const isInline = !className;
-            if (isInline) {
+    <div ref={containerRef}>
+      <MDEditor
+        value={source}
+        preview="preview"
+        hideToolbar
+        visibleDragbar={false}
+        height={fullHeight ? 'unset' : '100lvh'}
+        enableScroll={!fullHeight}
+        data-color-mode={colorMode}
+        previewOptions={{
+          remarkPlugins: [
+            remarkGfm,
+            remarkDeflist,
+            remarkHeadingId,
+            remarkSupersub,
+          ],
+          rehypePlugins: [
+            rehypeSlug,
+            [rehypeAutolinkHeadings, { behavior: 'wrap' }],
+            rehypeHighlight,
+          ],
+          components: {
+            h1: ({ children, ...props }) => (
+              <h1 className="scroll-mt-24" {...props}>{children}</h1>
+            ),
+            h2: ({ children, ...props }) => (
+              <h2 className="scroll-mt-24" {...props}>{children}</h2>
+            ),
+            h3: ({ children, ...props }) => (
+              <h3 className="scroll-mt-24" {...props}>{children}</h3>
+            ),
+            h4: ({ children, ...props }) => (
+              <h4 className="scroll-mt-24" {...props}>{children}</h4>
+            ),
+            h5: ({ children, ...props }) => (
+              <h5 className="scroll-mt-24" {...props}>{children}</h5>
+            ),
+            h6: ({ children, ...props }) => (
+              <h6 className="scroll-mt-24" {...props}>{children}</h6>
+            ),
+            p: ({ children, ...props }) => (
+              <p {...props}>{children}</p>
+            ),
+            a: ({ href, children, ...props }) => {
+              const isExternal = !!href && /^https?:\/\//i.test(href);
               return (
-                <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-sm" {...props}>
+                <a
+                  href={href}
+                  rel={isExternal ? 'noreferrer noopener' : undefined}
+                  target={isExternal ? '_blank' : undefined}
+                  {...props}
+                >
+                  {children}
+                </a>
+              );
+            },
+            img: ({ alt, ...props }) => (
+              <img
+                alt={alt ?? ''}
+                loading="lazy"
+                {...props}
+              />
+            ),
+            ul: ({ children, ...props }) => (
+              <ul {...props}>{children}</ul>
+            ),
+            ol: ({ children, ...props }) => (
+              <ol {...props}>{children}</ol>
+            ),
+            li: ({ children, ...props }) => (
+              <li {...props}>{children}</li>
+            ),
+            blockquote: ({ children, ...props }) => (
+              <blockquote {...props}>
+                {children}
+              </blockquote>
+            ),
+            hr: (props) => <hr {...props} />,
+            table: ({ children, ...props }) => (
+              <div className="w-full overflow-x-auto">
+                <table className="text-left" {...props}>{children}</table>
+              </div>
+            ),
+            thead: ({ children, ...props }) => (
+              <thead {...props}>{children}</thead>
+            ),
+            th: ({ children, ...props }) => (
+              <th {...props}>{children}</th>
+            ),
+            td: ({ children, ...props }) => (
+              <td {...props}>{children}</td>
+            ),
+            code: ({ className, children, ...props }) => {
+              const isInline = !className;
+              if (isInline) {
+                return (
+                  <code {...props}>
+                    {children}
+                  </code>
+                );
+              }
+              return (
+                <code className={className} {...props}>
                   {children}
                 </code>
               );
-            }
-            return (
-              <code className={className} {...props}>
+            },
+            pre: ({ children, ...props }) => (
+              <pre {...props}>
                 {children}
-              </code>
-            );
+              </pre>
+            ),
+            del: ({ children, ...props }) => (
+              <del {...props}>{children}</del>
+            ),
+            input: ({ type, checked, ...props }) => {
+              if (type === 'checkbox') {
+                return (
+                  <input
+                    type="checkbox"
+                    checked={checked}
+                    readOnly
+                    className="mr-2 align-middle"
+                    {...props}
+                  />
+                );
+              }
+              return <input type={type} {...props} />;
+            },
+            mark: ({ children, ...props }) => (
+              <mark {...props}>
+                {children}
+              </mark>
+            ),
+            sub: ({ children, ...props }) => (
+              <sub {...props}>{children}</sub>
+            ),
+            sup: ({ children, ...props }) => (
+              <sup {...props}>{children}</sup>
+            ),
+            dl: ({ children, ...props }) => (
+              <dl {...props}>{children}</dl>
+            ),
+            dt: ({ children, ...props }) => (
+              <dt {...props}>{children}</dt>
+            ),
+            dd: ({ children, ...props }) => (
+              <dd {...props}>{children}</dd>
+            ),
           },
-          pre: ({ children, ...props }) => (
-            <pre className="my-6 overflow-x-auto rounded-md border bg-muted/60 p-4 text-sm leading-6" {...props}>
-              {children}
-            </pre>
-          ),
-          del: ({ children, ...props }) => (
-            <del className="text-foreground/70" {...props}>{children}</del>
-          ),
-          input: ({ type, checked, ...props }) => {
-            if (type === 'checkbox') {
-              return (
-                <input
-                  type="checkbox"
-                  checked={checked}
-                  readOnly
-                  className="mr-2 align-middle"
-                  {...props}
-                />
-              );
-            }
-            return <input type={type} {...props} />;
-          },
-          mark: ({ children, ...props }) => (
-            <mark className="rounded bg-yellow-200/70 px-1 dark:bg-yellow-400/30" {...props}>
-              {children}
-            </mark>
-          ),
-          sub: ({ children, ...props }) => (
-            <sub className="text-xs" {...props}>{children}</sub>
-          ),
-          sup: ({ children, ...props }) => (
-            <sup className="text-xs" {...props}>{children}</sup>
-          ),
-          dl: ({ children, ...props }) => (
-            <dl className="my-6 space-y-2" {...props}>{children}</dl>
-          ),
-          dt: ({ children, ...props }) => (
-            <dt className="font-semibold" {...props}>{children}</dt>
-          ),
-          dd: ({ children, ...props }) => (
-            <dd className="ml-4 text-foreground/80" {...props}>{children}</dd>
-          ),
-        },
-      }}
-    />
+        }}
+      />
+    </div>
   );
 }

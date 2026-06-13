@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import Squares from '@/components/reactbits/Backgrounds/Squares/Squares';
 import { staticPersonalInfo } from '@/lib/data';
 import {
   SEO_DESCRIPTION_MAX,
@@ -69,7 +68,6 @@ export default async function PublicLayout({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <Squares className="absolute inset-0 -z-10 size-full" speed={0.1} squareSize={30} borderColor='hsl(var(--border) / 0.1)' hoverFillColor='hsl(var(--accent) / 0.05)' />
       <Navbar personalInfo={info} />
       <main>{children}</main>
       <Footer />

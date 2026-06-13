@@ -147,6 +147,181 @@
     @apply px-6 py-8 sm:px-10 sm:py-10;
   }
 
+  .blog-post-content .w-md-editor {
+    @apply !p-0 !border-0 !bg-transparent;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+
+  .blog-post-content .w-md-editor-content {
+    height: auto !important;
+    min-height: 0 !important;
+    flex: none !important;
+    overflow: visible !important;
+  }
+
+  .blog-post-content .w-md-editor-preview {
+    @apply !p-0;
+    overflow: visible !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  .blog-post-content .wmde-markdown,
+  .blog-post-content .wmde-preview,
+  .blog-post-content .wmde-html {
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+
+  .blog-post-content .w-md-editor-preview .wm-highlight {
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+
+  .blog-post-content {
+    @apply text-foreground;
+  }
+
+  .blog-post-content > * + * {
+    @apply mt-6;
+  }
+
+  .blog-post-content h1 {
+    @apply text-3xl sm:text-4xl font-bold font-headline text-foreground mt-12 mb-4 leading-tight;
+  }
+
+  .blog-post-content h2 {
+    @apply text-2xl sm:text-3xl font-semibold font-headline text-foreground mt-12 mb-4 leading-tight;
+  }
+
+  .blog-post-content h3 {
+    @apply text-xl sm:text-2xl font-semibold font-headline text-foreground mt-10 mb-3 leading-tight;
+  }
+
+  .blog-post-content h4 {
+    @apply text-lg sm:text-xl font-semibold text-foreground mt-8 mb-3;
+  }
+
+  .blog-post-content h5 {
+    @apply text-base sm:text-lg font-semibold text-foreground mt-6 mb-2;
+  }
+
+  .blog-post-content h6 {
+    @apply text-sm sm:text-base font-semibold uppercase tracking-wide text-foreground mt-6 mb-2;
+  }
+
+  .blog-post-content p {
+    @apply text-base sm:text-[17px] leading-7 sm:leading-8 text-foreground/90 mb-0;
+  }
+
+  .blog-post-content a {
+    @apply font-medium text-primary underline underline-offset-4 decoration-primary/30 hover:decoration-primary transition-[color,text-decoration-color];
+  }
+
+  .blog-post-content strong {
+    @apply font-semibold text-foreground;
+  }
+
+  .blog-post-content em {
+    @apply italic;
+  }
+
+  .blog-post-content ul {
+    @apply list-disc pl-6 mb-0 space-y-2;
+  }
+
+  .blog-post-content ol {
+    @apply list-decimal pl-6 mb-0 space-y-2;
+  }
+
+  .blog-post-content li {
+    @apply text-base sm:text-[17px] leading-7 sm:leading-8 text-foreground/90;
+  }
+
+  .blog-post-content li > ul,
+  .blog-post-content li > ol {
+    @apply mt-2;
+  }
+
+  .blog-post-content blockquote {
+    @apply border-l-4 border-primary/40 pl-6 py-2 my-8 italic text-lg text-foreground/80 bg-muted/30 rounded-r-lg;
+  }
+
+  .blog-post-content blockquote p {
+    @apply text-lg leading-relaxed;
+  }
+
+  .blog-post-content hr {
+    @apply border-border/40 my-12;
+  }
+
+  .blog-post-content img {
+    @apply my-8 w-full rounded-xl border border-border/30 shadow-sm;
+    max-height: 600px;
+    object-fit: contain;
+  }
+
+  .blog-post-content code:not(pre code) {
+    @apply rounded-md bg-muted px-2 py-1 font-mono text-[15px] text-foreground border border-border/30;
+  }
+
+  .blog-post-content pre {
+    @apply my-8 overflow-x-auto rounded-xl border border-border/30 bg-muted/40 p-5 text-sm sm:text-[15px] leading-relaxed shadow-sm;
+  }
+
+  .blog-post-content pre code {
+    @apply bg-transparent p-0 text-inherit;
+  }
+
+  .blog-post-content table {
+    @apply w-full border-collapse overflow-hidden rounded-xl border border-border/40 my-8;
+  }
+
+  .blog-post-content thead {
+    @apply bg-muted/50;
+  }
+
+  .blog-post-content th {
+    @apply border border-border/40 px-4 py-3 text-sm font-semibold text-foreground text-left;
+  }
+
+  .blog-post-content td {
+    @apply border border-border/40 px-4 py-3 text-sm text-foreground/90 align-top;
+  }
+
+  .blog-post-content tr:hover td {
+    @apply bg-muted/20;
+  }
+
+  .blog-post-content mark {
+    @apply bg-yellow-200/70 dark:bg-yellow-400/30 px-1.5 py-0.5 rounded;
+  }
+
+  .blog-post-content dl {
+    @apply my-6 space-y-3;
+  }
+
+  .blog-post-content dt {
+    @apply font-semibold text-foreground text-lg;
+  }
+
+  .blog-post-content dd {
+    @apply ml-6 text-foreground/80 leading-relaxed;
+  }
+
+  .blog-post-content del {
+    @apply text-foreground/60 line-through;
+  }
+
+  .blog-post-content sub,
+  .blog-post-content sup {
+    @apply text-xs;
+  }
+
   .article-content {
     @apply space-y-6;
   }

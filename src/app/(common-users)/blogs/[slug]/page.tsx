@@ -1,7 +1,6 @@
 
 import { notFound } from 'next/navigation';
 import { getPostBySlug } from '@/lib/actions';
-import { Badge } from '@/components/ui/badge';
 import { format, parseISO } from 'date-fns';
 import { MarkdownPreview } from '@/components/common/MarkdownPreview';
 import type { Metadata } from 'next';
@@ -13,8 +12,7 @@ import {
   SITE_URL,
 } from '@/lib/seo/config';
 import { resolveCanonicalUrl, truncateForSeo } from '@/lib/seo/paths';
-import ThemeShapeGrid from '@/components/reactbits/Backgrounds/ThemeShapeGrid';
-import { ArrowLeftIcon, CalendarIcon, ClockIcon } from 'lucide-react';
+import { ArrowLeftIcon } from 'lucide-react';
 import Link from 'next/link';
 
 type Props = {
@@ -94,66 +92,90 @@ export default async function BlogPostPage({ params }: Props) {
   };
 
   return (
-    <div className="relative min-h-screen">
-      <div className="fixed inset-0 -z-10 pointer-events-none">
-        <ThemeShapeGrid />
-      </div>
-
+    <div className="min-h-screen bg-background">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16">
-        <Link
-          href="/blogs"
-          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8 group"
-        >
-          <ArrowLeftIcon className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
-          Back to Blog
-        </Link>
+      <article className="max-w-3xl mx-auto px-4 sm:px-6 pt-12 sm:pt-16 pb-20">
+        <header className="mb-10">
+          <Link
+            href="/blogs"
+            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8 group"
+          >
+            <ArrowLeftIcon className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
+            <span className="font-medium">Back to Blog</span>
+          </Link>
 
-        <article className="prose-container">
-          <header className="mb-10 pb-8 border-b border-border/50">
+          {post.tags && post.tags.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-4">
-              {post.tags?.map(tag => (
-                <Badge key={tag} variant="secondary" className="font-medium">{tag}</Badge>
+              {post.tags.map(tag => (
+                <span
+                  key={tag}
+                  className="inline-block text-xs font-semibold uppercase tracking-wider text-primary hover:text-primary/80 transition-colors cursor-default"
+                >
+                  #{tag}
+                </span>
               ))}
             </div>
+          )}
 
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold font-headline text-foreground leading-tight mb-4">
-              {post.title}
-            </h1>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold font-headline text-foreground leading-[1.15] mb-6 tracking-tight">
+            {post.title}
+          </h1>
 
-            <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-              <span className="inline-flex items-center gap-1.5">
-                <CalendarIcon className="w-4 h-4" />
-                <time dateTime={post.published_at ?? post.created_at}>
-                  {format(parseISO(post.published_at ?? post.created_at), 'MMMM d, yyyy')}
-                </time>
-              </span>
-              <span className="inline-flex items-center gap-1.5">
-                <ClockIcon className="w-4 h-4" />
-                {readTime} min read
-              </span>
-            </div>
-          </header>
+          {post.snippet && (
+            <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed mb-6 font-light">
+              {post.snippet}
+            </p>
+          )}
 
-          <div className="article-content">
-            <MarkdownPreview source={post.content} />
+          <div className="flex items-center gap-3 text-sm text-muted-foreground pb-6 border-b border-border/40">
+            <time
+              className="font-medium"
+              dateTime={post.published_at ?? post.created_at}
+            >
+              {format(parseISO(post.published_at ?? post.created_at), 'MMM d, yyyy')}
+            </time>
+            <span className="text-muted-foreground/40">·</span>
+            <span>{readTime} min read</span>
           </div>
+        </header>
 
-          <footer className="mt-12 pt-8 border-t border-border/50">
+        <div className="blog-post-content">
+          <MarkdownPreview source={post.content} fullHeight />
+        </div>
+
+        <footer className="mt-16 pt-8 border-t border-border/40">
+          {post.tags && post.tags.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-8">
+              {post.tags.map(tag => (
+                <span
+                  key={tag}
+                  className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-muted text-muted-foreground hover:bg-muted/80 transition-colors cursor-default"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+
+          <div className="flex items-center justify-between">
             <Link
               href="/blogs"
-              className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors group"
+              className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group"
             >
               <ArrowLeftIcon className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
-              More Articles
+              <span>More articles</span>
             </Link>
-          </footer>
-        </article>
-      </div>
+
+            <p className="text-xs text-muted-foreground">
+              {SITE_NAME}
+            </p>
+          </div>
+        </footer>
+      </article>
     </div>
   );
 }

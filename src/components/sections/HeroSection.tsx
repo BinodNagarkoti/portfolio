@@ -56,9 +56,9 @@ const HeroSection = ({ personalInfo }: { personalInfo: PersonalInfo | null }) =>
                         </div>
                     </div>
                     <div className="relative order-1 md:order-2">
-                        <div className="relative mx-auto w-[300px] h-[300px] lg:w-[350px] lg:h-[350px] group">
-                            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 animate-pulse"></div>
-                            <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-primary/10 to-transparent"></div>
+                        <div className="relative mx-auto w-75 h-75 lg:w-87.5 lg:h-87.5 group">
+                            <div className="absolute inset-0 rounded-2xl bg-linear-to-br from-primary/20 to-primary/5 animate-pulse"></div>
+                            <div className="absolute inset-0 rounded-2xl bg-linear-to-tr from-primary/10 to-transparent"></div>
                             <div className="absolute inset-0 bg-card rounded-lg shadow-lg p-2">
                                 <Image
                                     src="/me.png"
