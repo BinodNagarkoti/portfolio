@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { CalendarIcon, ArrowRightIcon, FileTextIcon } from 'lucide-react';
 import ThemeShapeGrid from '@/components/reactbits/Backgrounds/ThemeShapeGrid';
+import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from '@/lib/seo/config';
 
 const BlogListPage: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -33,8 +34,20 @@ const BlogListPage: React.FC = () => {
     fetchPosts();
   }, []);
 
+  const collectionSchema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": `${SITE_NAME} - Articles & Tutorials`,
+    "description": SITE_DESCRIPTION,
+    "url": `${SITE_URL}/blogs`,
+  };
+
   return (
     <div className="relative min-h-screen">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }}
+      />
       <div className="fixed inset-0 -z-10 pointer-events-none">
         <ThemeShapeGrid />
       </div>

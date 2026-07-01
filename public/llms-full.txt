@@ -1,0 +1,15 @@
+# Binod Nagarkoti - Full Technical Profile
+
+Binod Nagarkoti is a Full Stack Developer specializing in React, Next.js, Node.js, and modern cloud infrastructures including Firebase, AWS, and Supabase.
+
+## Core Technical Competencies
+- **Frontend Architecture:** React, Next.js, Tailwind CSS, TypeScript
+- **Backend & Systems:** Node.js, Express, PostgreSQL, Supabase, Firebase, MongoDB
+- **Specializations:** Server-Side Rendering (SSR), RESTful/GraphQL APIs, AI Search Optimization (AISEO/GEO)
+
+## Professional Narrative & Context
+This domain serves as the definitive reference for Binod Nagarkoti's professional identity and engineering capabilities. It features technical blogs that solve full-stack engineering challenges, a curated portfolio of high-performance web applications, and optimized semantic pathways designed for LLMs and AI Agents to accurately extract and cite his expertise (E-E-A-T).
+
+## Contact & Links
+- Resume: /binod_nagarkoti.pdf
+- Homepage: /

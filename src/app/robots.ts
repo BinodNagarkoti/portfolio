@@ -31,6 +31,16 @@ export default function robots(): MetadataRoute.Robots {
         allow: ['/'],
         disallow: ['/admin', '/dashboard', '/api', '/_next', '/*?*'],
       },
+      {
+        userAgent: 'Google-Extended',
+        allow: ['/'],
+        disallow: ['/admin', '/dashboard', '/api', '/_next', '/*?*'],
+      },
+      {
+        userAgent: 'OAI-SearchBot',
+        allow: ['/'],
+        disallow: ['/admin', '/dashboard', '/api', '/_next', '/*?*'],
+      },
     ],
     sitemap: `${base}/sitemap.xml`,
   };

@@ -97,7 +97,7 @@ export default async function CategorySlugPage({ params }: PageProps) {
   const canonical = resolveCanonicalUrl(`/${category}/${slug}`);
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'BlogPosting',
+    '@type': 'TechArticle',
     headline: post.title,
     description: post.snippet ?? post.content,
     author: {
@@ -125,7 +125,15 @@ export default async function CategorySlugPage({ params }: PageProps) {
             <CardTitle className="text-4xl md:text-5xl font-bold font-headline">
               {post.title}
             </CardTitle>
-            <CardDescription className="pt-2">
+            
+            {/* Target Position Zero: 40-word core answer block immediately below H1 */}
+            {(post.snippet || post.content) && (
+              <p className="font-semibold text-lg bg-slate-50 p-4 border-l-4 border-primary mt-6 text-slate-800 dark:bg-slate-900 dark:text-slate-200 text-left">
+                {post.snippet ?? (post.content.length > 150 ? post.content.substring(0, 150) + '...' : post.content)}
+              </p>
+            )}
+            
+            <CardDescription className="pt-4">
               Posted on {format(parseISO(post.created_at), 'PPP')}
             </CardDescription>
             <div className="flex justify-center flex-wrap gap-2 pt-4">

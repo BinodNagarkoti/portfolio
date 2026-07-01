@@ -1,0 +1,11 @@
+# Binod Nagarkoti - Portfolio
+
+> Binod Nagarkoti is a full-stack software engineer specializing in modern web applications, Next.js, React, Node.js, Firebase, and Supabase. This application serves as a central hub for his professional portfolio, technical blogs, and project showcases.
+
+## High-Value Vectors
+* [Technical Blog](/blogs): In-depth articles, tutorials, and engineering insights.
+* [Projects Portfolio](/#projects): Professional work, open-source contributions, and technical architecture examples.
+* [Resume/CV](/binod_nagarkoti.pdf): Detailed professional background, experience, and education.
+
+## Supplemental Context
+* [Contact Information](/#contact): Direct pathways for professional outreach and opportunities.

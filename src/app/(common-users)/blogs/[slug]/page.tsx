@@ -75,7 +75,7 @@ export default async function BlogPostPage({ params }: Props) {
   const canonical = `${SITE_URL}/blogs/${post.slug}`;
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'BlogPosting',
+    '@type': 'TechArticle',
     headline: post.title,
     description: post.snippet ?? post.content,
     author: {
@@ -125,9 +125,10 @@ export default async function BlogPostPage({ params }: Props) {
             {post.title}
           </h1>
 
-          {post.snippet && (
-            <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed mb-6 font-light">
-              {post.snippet}
+          {/* Target Position Zero: 40-word core answer block immediately below H1 */}
+          {(post.snippet || post.content) && (
+            <p className="font-semibold text-lg bg-slate-50 p-4 border-l-4 border-primary mb-6 text-slate-800 dark:bg-slate-900 dark:text-slate-200">
+              {post.snippet ?? (post.content.length > 150 ? post.content.substring(0, 150) + '...' : post.content)}
             </p>
           )}
 
