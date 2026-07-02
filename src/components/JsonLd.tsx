@@ -1,5 +1,5 @@
-import { ADMIN_PATH_PREFIXES } from '@/lib/seo/config';
 import { isAdminPath } from '@/lib/seo/paths';
+import { ADMIN_PATH_PREFIXES } from '@/lib/seo/config';
 
 type AggregateRating = {
   ratingValue: number;

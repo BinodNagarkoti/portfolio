@@ -181,24 +181,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         </SidebarFooter>
       </Sidebar>
       <div className="flex flex-col flex-1 overflow-hidden">
-    {/* <header className="sticky top-0 z-10 flex h-[--header-height] shrink-0 items-center gap-2 border-b bg-background/90 backdrop-blur-sm transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-[--header-height]">
-               <div className="flex w-full items-center gap-2 px-4 lg:gap-4 lg:px-6">
-
-           <SidebarTrigger className="mr-1" />
-             <Separator
-          orientation="vertical"
-           className="mx-1 data-[orientation=vertical]:h-6"
-         />
-           <h1 className="text-2xl font-bold tracking-tight">
-             {navItems
-               .flatMap((group) => group.items || [group])
-               .find((item) => item.href === pathname)?.label || 'Dashboard'}
-           </h1>
-           <div className="ml-auto flex items-center gap-2">
-             {/* User menu or other actions can go here */}
-            {/* </div>
-           </div>
-         </header> */}
          <main className="flex flex-1 flex-col overflow-auto">
            <div className="@container/main flex flex-1 flex-col gap-2">
              <div className="flex flex-col gap-4 py-6 px-4 md:gap-6 md:py-8 md:px-6">

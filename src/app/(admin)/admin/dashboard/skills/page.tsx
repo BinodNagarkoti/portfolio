@@ -11,7 +11,7 @@ import { getSkillCategoriesWithSkills, deleteSkill, deleteSkillCategory } from '
 import type { SkillCategoryWithSkills, Skill } from '@/lib/supabase-types';
 import { SkillCategoryForm, SkillForm } from '@/components/admin/SkillForms';
 import { useToast } from '@/hooks/use-toast';
-import { Skeleton } from '@/components/ui/skeleton';
+import { AdminPageSkeleton } from '@/components/admin/AdminPageSkeleton';
 import { Badge } from '@/components/ui/badge';
 
 export default function SkillsAdminPage() {
@@ -85,24 +85,7 @@ export default function SkillsAdminPage() {
     await fetchSkills();
   };
 
-  if (isLoading) {
-    return (
-        <div className="space-y-6">
-            <div className="flex justify-between items-center">
-                <Skeleton className="h-10 w-1/4" />
-                <Skeleton className="h-10 w-36" />
-            </div>
-            <Card>
-                <CardHeader><Skeleton className="h-6 w-1/2" /></CardHeader>
-                <CardContent className="space-y-4">
-                    <Skeleton className="h-8 w-full" />
-                    <Skeleton className="h-8 w-full" />
-                    <Skeleton className="h-8 w-3/4" />
-                </CardContent>
-            </Card>
-        </div>
-    )
-  }
+  if (isLoading) return <AdminPageSkeleton />;
 
   return (
     <div className="space-y-6">

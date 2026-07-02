@@ -1,17 +1,14 @@
 'use client';
 
-import SectionWrapper from '@/components/common/SectionWrapper';
 import ProjectCard from '@/components/common/ProjectCard';
 import { getProjects } from '@/lib/actions';
 import { staticPersonalInfo } from '@/lib/data';
 import { useEffect, useState } from 'react';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
-import type { PersonalInfo } from '@/lib/supabase-types';
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-const ProjectsSection = ({ personalInfo }: { personalInfo?: PersonalInfo | null }) => {
+const ProjectsSection = () => {
   const [projects, setProjects] = useState<any[]>([]);
   const [filteredProjects, setFilteredProjects] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);

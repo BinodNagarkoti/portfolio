@@ -1,22 +1,12 @@
-
 'use client';
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Calendar } from '@/components/ui/calendar';
-import { CalendarIcon, SaveIcon } from 'lucide-react';
 import type { Education } from '@/lib/supabase-types';
 import { upsertEducation } from '@/lib/actions';
 import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
-import { cn } from '@/lib/utils';
-import { format, parseISO } from 'date-fns';
+import { parseISO } from 'date-fns';
+import { DynamicForm, FormSection } from './DynamicForm';
 import { CustomSelectDate } from '../common/FormItem/CustomSelectDate';
 
 const formSchema = z.object({
@@ -24,7 +14,7 @@ const formSchema = z.object({
   institution: z.string().min(1, 'Institution is required'),
   location: z.string().optional(),
   description: z.string().optional(),
-  start_date: z.date({ required_error: "A start date is required." }),
+  start_date: z.date({ required_error: 'A start date is required.' }),
   end_date: z.date().nullable().optional(),
 });
 
@@ -39,9 +29,8 @@ export function EducationForm({ education, onSuccess }: EducationFormProps) {
   const { toast } = useToast();
   const [isSaving, setIsSaving] = useState(false);
 
-  const parseDate = (dateStr: string | null | undefined): Date | undefined => {
-    return dateStr ? parseISO(dateStr) : undefined;
-  };
+  const parseDate = (dateStr: string | null | undefined): Date | undefined =>
+    dateStr ? parseISO(dateStr) : undefined;
 
   const defaultValues: Partial<EducationFormValues> = {
     degree: education?.degree || '',
@@ -52,19 +41,14 @@ export function EducationForm({ education, onSuccess }: EducationFormProps) {
     end_date: parseDate(education?.end_date),
   };
 
-  const form = useForm<EducationFormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues,
-  });
-
   const onSubmit = async (values: EducationFormValues) => {
     setIsSaving(true);
-    
+
     const dataToSave = {
-        id: education?.id,
-        ...values,
-        start_date: values.start_date.toISOString().substring(0, 10), // format to YYYY-MM-DD
-        end_date: values.end_date ? values.end_date.toISOString().substring(0, 10) : null,
+      id: education?.id,
+      ...values,
+      start_date: values.start_date.toISOString().substring(0, 10),
+      end_date: values.end_date ? values.end_date.toISOString().substring(0, 10) : null,
     };
 
     const result = await upsertEducation(dataToSave as any);
@@ -78,75 +62,61 @@ export function EducationForm({ education, onSuccess }: EducationFormProps) {
     setIsSaving(false);
   };
 
-  return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <FormField
-          control={form.control}
-          name="degree"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Degree</FormLabel>
-              <FormControl><Input placeholder="e.g., B.Sc. in Computer Science" {...field} /></FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="institution"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Institution</FormLabel>
-              <FormControl><Input placeholder="e.g., University of Example" {...field} /></FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-         <FormField
-          control={form.control}
-          name="location"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Location (Optional)</FormLabel>
-              <FormControl><Input placeholder="e.g., City, Country" {...field} value={field.value ?? ''}/></FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description (Optional)</FormLabel>
-              <FormControl><Textarea placeholder="Describe your studies, thesis, or achievements." {...field} value={field.value ?? ''} /></FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <FormField
-                control={form.control}
-                name="start_date"
-                render={({ field }) => (
-                  <CustomSelectDate  disabledPast={false} disabledFuture={true} field={field} label="Start Date" />
-                )}
-            />
-            <FormField
-                control={form.control}
-                name="end_date"
-                render={({ field }) => (
-                  <CustomSelectDate formDescription="Leave blank if study is ongoing."  disabledPast={false} disabledFuture={true} field={field} label="End Date" />
-                )}
-            />
-        </div>
+  const formSections: FormSection<EducationFormValues>[] = [
+    {
+      rows: [
+        {
+          fields: [
+            { name: 'degree', label: 'Degree', placeholder: 'e.g., B.Sc. in Computer Science', type: 'text' },
+            { name: 'institution', label: 'Institution', placeholder: 'e.g., University of Example', type: 'text' },
+          ],
+        },
+        {
+          fields: [
+            { name: 'location', label: 'Location (Optional)', placeholder: 'e.g., City, Country', type: 'text' },
+          ],
+        },
+        {
+          fields: [
+            { name: 'description', label: 'Description (Optional)', placeholder: 'Describe your studies, thesis, or achievements.', type: 'textarea' },
+          ],
+        },
+        {
+          fields: [
+            {
+              name: 'start_date',
+              type: 'custom',
+              render: ({ field }) => (
+                <CustomSelectDate field={field} label="Start Date" disabledPast={false} disabledFuture={true} />
+              ),
+            },
+            {
+              name: 'end_date',
+              type: 'custom',
+              render: ({ field }) => (
+                <CustomSelectDate
+                  field={field}
+                  label="End Date"
+                  formDescription="Leave blank if study is ongoing."
+                  disabledPast={false}
+                  disabledFuture={true}
+                />
+              ),
+            },
+          ],
+        },
+      ],
+    },
+  ];
 
-        <Button type="submit" disabled={isSaving}>
-            {isSaving ? <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div> : <SaveIcon className="mr-2 h-4 w-4" />}
-            {isSaving ? 'Saving...' : 'Save Education'}
-        </Button>
-      </form>
-    </Form>
+  return (
+    <DynamicForm
+      schema={formSchema}
+      defaultValues={defaultValues}
+      sections={formSections}
+      onSubmit={onSubmit}
+      submitButtonText="Save Education"
+      isSaving={isSaving}
+    />
   );
 }

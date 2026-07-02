@@ -298,6 +298,13 @@ const ShapeGrid: React.FC<ShapeGridProps> = ({
       }
     };
 
+    const updateHoverTrail = () => {
+      if (hoveredSquareRef.current && hoverTrailAmount > 0) {
+        trailCells.current.unshift({ ...hoveredSquareRef.current });
+        if (trailCells.current.length > hoverTrailAmount) trailCells.current.length = hoverTrailAmount;
+      }
+    };
+
     const handleMouseMove = (event: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
       const mouseX = event.clientX - rect.left;
@@ -319,10 +326,7 @@ const ShapeGrid: React.FC<ShapeGridProps> = ({
           hoveredSquareRef.current.x !== col ||
           hoveredSquareRef.current.y !== row
         ) {
-          if (hoveredSquareRef.current && hoverTrailAmount > 0) {
-            trailCells.current.unshift({ ...hoveredSquareRef.current });
-            if (trailCells.current.length > hoverTrailAmount) trailCells.current.length = hoverTrailAmount;
-          }
+          updateHoverTrail();
           hoveredSquareRef.current = { x: col, y: row };
         }
       } else if (isTri) {
@@ -341,10 +345,7 @@ const ShapeGrid: React.FC<ShapeGridProps> = ({
           hoveredSquareRef.current.x !== col ||
           hoveredSquareRef.current.y !== row
         ) {
-          if (hoveredSquareRef.current && hoverTrailAmount > 0) {
-            trailCells.current.unshift({ ...hoveredSquareRef.current });
-            if (trailCells.current.length > hoverTrailAmount) trailCells.current.length = hoverTrailAmount;
-          }
+          updateHoverTrail();
           hoveredSquareRef.current = { x: col, y: row };
         }
       } else if (shape === 'circle') {
@@ -362,10 +363,7 @@ const ShapeGrid: React.FC<ShapeGridProps> = ({
           hoveredSquareRef.current.x !== col ||
           hoveredSquareRef.current.y !== row
         ) {
-          if (hoveredSquareRef.current && hoverTrailAmount > 0) {
-            trailCells.current.unshift({ ...hoveredSquareRef.current });
-            if (trailCells.current.length > hoverTrailAmount) trailCells.current.length = hoverTrailAmount;
-          }
+          updateHoverTrail();
           hoveredSquareRef.current = { x: col, y: row };
         }
       } else {
@@ -383,20 +381,14 @@ const ShapeGrid: React.FC<ShapeGridProps> = ({
           hoveredSquareRef.current.x !== col ||
           hoveredSquareRef.current.y !== row
         ) {
-          if (hoveredSquareRef.current && hoverTrailAmount > 0) {
-            trailCells.current.unshift({ ...hoveredSquareRef.current });
-            if (trailCells.current.length > hoverTrailAmount) trailCells.current.length = hoverTrailAmount;
-          }
+          updateHoverTrail();
           hoveredSquareRef.current = { x: col, y: row };
         }
       }
     };
 
     const handleMouseLeave = () => {
-      if (hoveredSquareRef.current && hoverTrailAmount > 0) {
-        trailCells.current.unshift({ ...hoveredSquareRef.current });
-        if (trailCells.current.length > hoverTrailAmount) trailCells.current.length = hoverTrailAmount;
-      }
+      updateHoverTrail();
       hoveredSquareRef.current = null;
     };
 

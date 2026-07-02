@@ -16,6 +16,7 @@ import {
   isAdminSegment,
   resolveCanonicalUrl,
   truncateForSeo,
+  buildArticleJsonLd,
 } from '@/lib/seo/paths';
 
 type PageProps = {
@@ -95,23 +96,7 @@ export default async function CategorySlugPage({ params }: PageProps) {
   }
 
   const canonical = resolveCanonicalUrl(`/${category}/${slug}`);
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'TechArticle',
-    headline: post.title,
-    description: post.snippet ?? post.content,
-    author: {
-      '@type': 'Person',
-      name: SITE_NAME,
-    },
-    datePublished: post.published_at,
-    dateModified: post.updated_at,
-    mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': canonical,
-    },
-    keywords: post.tags?.join(', '),
-  };
+  const jsonLd = buildArticleJsonLd(post, canonical);
 
   return (
     <SectionWrapper>

@@ -5,14 +5,16 @@ import { useState, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { PlusCircleIcon, Trash2Icon, EditIcon } from "lucide-react";
+import { EditIcon } from "lucide-react";
 import { getExperience, deleteExperience } from '@/lib/actions';
 import type { Experience } from '@/lib/supabase-types';
 import { ExperienceForm } from '@/components/admin/ExperienceForm';
 import { useToast } from '@/hooks/use-toast';
-import { Skeleton } from '@/components/ui/skeleton';
-import { format, parseISO } from 'date-fns';
+import { AdminPageSkeleton } from '@/components/admin/AdminPageSkeleton';
+import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
+import { AdminDeleteDialog } from '@/components/admin/AdminDeleteDialog';
+import { AdminEmptyState } from '@/components/admin/AdminEmptyState';
+import { formatDateRange } from '@/lib/utils';
 
 export default function ExperienceAdminPage() {
   const [experience, setExperience] = useState<Experience[]>([]);
@@ -61,40 +63,16 @@ export default function ExperienceAdminPage() {
     await fetchExperience();
   };
 
-  const formatDateRange = (start: string, end: string | null | undefined) => {
-    if (!start) return '';
-    const startDate = format(parseISO(start), 'MMM yyyy');
-    const endDate = end ? format(parseISO(end), 'MMM yyyy') : 'Present';
-    return `${startDate} - ${endDate}`;
-  };
-
-  if (isLoading) {
-    return (
-      <div className="space-y-6">
-        <div className="flex justify-between items-center">
-            <Skeleton className="h-10 w-1/4" />
-            <Skeleton className="h-10 w-36" />
-        </div>
-        <div className="space-y-4">
-          {[...Array(2)].map((_, i) => <Card key={i}><CardHeader><Skeleton className="h-6 w-1/2" /></CardHeader><CardContent><Skeleton className="h-4 w-full" /></CardContent></Card>)}
-        </div>
-      </div>
-    )
-  }
+  if (isLoading) return <AdminPageSkeleton />;
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight">Manage Experience</h2>
-          <p className="text-muted-foreground">
-            Add, edit, or remove your professional experiences.
-          </p>
-        </div>
-        <Button onClick={handleAddNew}>
-          <PlusCircleIcon className="mr-2 h-4 w-4" /> Add Experience
-        </Button>
-      </div>
+      <AdminPageHeader
+        title="Manage Experience"
+        description="Add, edit, or remove your professional experiences."
+        buttonText="Add Experience"
+        onAdd={handleAddNew}
+      />
 
       <div className="space-y-4">
           {experience.map((exp) => (
@@ -109,23 +87,10 @@ export default function ExperienceAdminPage() {
                         <Button variant="outline" size="sm" onClick={() => handleEdit(exp)}>
                             <EditIcon className="mr-2 h-4 w-4" /> Edit
                         </Button>
-                        <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                                <Button variant="destructive" size="sm">
-                                <Trash2Icon className="mr-2 h-4 w-4" /> Delete
-                                </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                                <AlertDialogHeader>
-                                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                                    <AlertDialogDescription>This action cannot be undone. This will permanently delete this experience record.</AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                    <AlertDialogAction onClick={() => handleDelete(exp.id)}>Continue</AlertDialogAction>
-                                </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialog>
+                        <AdminDeleteDialog
+                          description="This action cannot be undone. This will permanently delete this experience record."
+                          onConfirm={() => handleDelete(exp.id)}
+                        />
                     </div>
                 </div>
               </CardHeader>
@@ -139,17 +104,13 @@ export default function ExperienceAdminPage() {
           ))}
         </div>
 
-      {experience.length === 0 && !isLoading && (
-        <Card className="text-center py-12">
-            <CardContent>
-                <h3 className="text-xl font-semibold">No Experience Records Found</h3>
-                <p className="text-muted-foreground mt-2">Click "Add Experience" to get started.</p>
-            </CardContent>
-        </Card>
-      )}
+      <AdminEmptyState
+        message="No Experience Records Found"
+        hint='Click "Add Experience" to get started.'
+      />
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+        <DialogContent className="sm:max-w-150 max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingExperience ? 'Edit Experience' : 'Add New Experience'}</DialogTitle>
           </DialogHeader>

@@ -2,12 +2,11 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { EyeClosed, EyeIcon, ArrowLeftIcon } from 'lucide-react'
+import { EyeClosed, EyeIcon } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createSupabaseBrowserClient } from '@/lib/supabase/client'
+import { AuthCard } from '@/components/admin/AuthCard'
 
 export default function NewPasswordResetPage() {
   const [password, setPassword] = useState('')
@@ -77,99 +76,79 @@ export default function NewPasswordResetPage() {
    };
  
    return (
-     <div className="min-h-screen flex items-center justify-center bg-background px-4">
-       <Card className="w-full max-w-md">
-         <CardHeader className="text-center">
-           <CardTitle className="text-2xl font-bold">Set New Password</CardTitle>
-           <CardDescription>Enter your new password</CardDescription>
-         </CardHeader>
-         <CardContent>
-           {error && (
-             <Alert variant="destructive" className="mb-4">
-               <AlertDescription>{error}</AlertDescription>
-             </Alert>
-           )}
-           
-           {success ? (
-             <div className="text-center py-4">
-               <div className="text-lg font-medium mb-2 text-green-600">Password Updated!</div>
-               <p className="text-sm text-muted-foreground">
-                 Your password has been successfully updated. Redirecting to login...
-               </p>
-             </div>
-           ) : (
-             <form onSubmit={handleSubmit} className="space-y-4">
-               <div className="space-y-2">
-                 <Label htmlFor="password">New Password</Label>
-                 <div className="relative">
-                   <Input
-                     id="password"
-                     type={showPassword ? "text" : "password"}
-                     value={password}
-                     onChange={(e) => setPassword(e.target.value)}
-                     required
-                     disabled={loading}
-                     placeholder="Enter new password"
-                   />
-                   <Button
-                     type="button"
-                     variant="ghost"
-                     size="icon"
-                     className="absolute right-0 top-0 h-full px-3"
-                     onClick={() => setShowPassword(!showPassword)}
-                     disabled={loading}
-                   >
-                     {showPassword ? <EyeClosed className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
-                   </Button>
-                 </div>
-               </div>
-               
-               <div className="space-y-2">
-                 <Label htmlFor="confirmPassword">Confirm Password</Label>
-                 <div className="relative">
-                   <Input
-                     id="confirmPassword"
-                     type={showConfirmPassword ? "text" : "password"}
-                     value={confirmPassword}
-                     onChange={(e) => setConfirmPassword(e.target.value)}
-                     required
-                     disabled={loading}
-                     placeholder="Confirm new password"
-                   />
-                   <Button
-                     type="button"
-                     variant="ghost"
-                     size="icon"
-                     className="absolute right-0 top-0 h-full px-3"
-                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                     disabled={loading}
-                   >
-                     {showConfirmPassword ? <EyeClosed className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
-                   </Button>
-                 </div>
-               </div>
-               
+     <AuthCard
+       title="Set New Password"
+       description="Enter your new password"
+       error={error}
+     >
+       {success ? (
+         <div className="text-center py-4">
+           <div className="text-lg font-medium mb-2 text-green-600">Password Updated!</div>
+           <p className="text-sm text-muted-foreground">
+             Your password has been successfully updated. Redirecting to login...
+           </p>
+         </div>
+       ) : (
+         <form onSubmit={handleSubmit} className="space-y-4">
+           <div className="space-y-2">
+             <Label htmlFor="password">New Password</Label>
+             <div className="relative">
+               <Input
+                 id="password"
+                 type={showPassword ? "text" : "password"}
+                 value={password}
+                 onChange={(e) => setPassword(e.target.value)}
+                 required
+                 disabled={loading}
+                 placeholder="Enter new password"
+               />
                <Button
-                 type="submit"
-                 className="w-full"
+                 type="button"
+                 variant="ghost"
+                 size="icon"
+                 className="absolute right-0 top-0 h-full px-3"
+                 onClick={() => setShowPassword(!showPassword)}
                  disabled={loading}
                >
-                 {loading ? 'Updating Password...' : 'Update Password'}
+                 {showPassword ? <EyeClosed className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
                </Button>
-             </form>
-           )}
-         </CardContent>
-         <CardFooter className="flex justify-center">
+             </div>
+           </div>
+           
+           <div className="space-y-2">
+             <Label htmlFor="confirmPassword">Confirm Password</Label>
+             <div className="relative">
+               <Input
+                 id="confirmPassword"
+                 type={showConfirmPassword ? "text" : "password"}
+                 value={confirmPassword}
+                 onChange={(e) => setConfirmPassword(e.target.value)}
+                 required
+                 disabled={loading}
+                 placeholder="Confirm new password"
+               />
+               <Button
+                 type="button"
+                 variant="ghost"
+                 size="icon"
+                 className="absolute right-0 top-0 h-full px-3"
+                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                 disabled={loading}
+               >
+                 {showConfirmPassword ? <EyeClosed className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
+               </Button>
+             </div>
+           </div>
+           
            <Button
-             variant="outline"
-             onClick={() => router.push('/admin/login')}
+             type="submit"
              className="w-full"
+             disabled={loading}
            >
-             <ArrowLeftIcon className="mr-2 h-4 w-4" />
-             Back to Login
+             {loading ? 'Updating Password...' : 'Update Password'}
            </Button>
-         </CardFooter>
-       </Card>
-     </div>
+         </form>
+       )}
+     </AuthCard>
    );
  }

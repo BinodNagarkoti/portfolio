@@ -1,33 +1,4 @@
-
-import * as React from 'react';
-import type { LucideIcon, LucideProps } from 'lucide-react';
-import {
-  Code2Icon,
-  DatabaseIcon,
-  ServerCogIcon,
-  CloudIcon,
-  ContainerIcon,
-  GitForkIcon,
-  WindIcon,
-  ZapIcon,
-  CpuIcon,
-  PaletteIcon,
-  GlobeIcon,
-  ShoppingBagIcon,
-  MessageSquareIcon,
-  BrainIcon,
-  ShieldCheckIcon,
-  Settings2Icon,
-  BriefcaseIcon,
-  UsersIcon,
-  RouteIcon,
-  FilmIcon,
-  BotIcon,
-  CalculatorIcon
-} from 'lucide-react';
 import type { PersonalInfo } from './supabase-types';
-
-// Static blog posts have been removed as this section is now database-driven.
 
 // Fallback static data that conforms to the PersonalInfo type from Supabase
 export const staticPersonalInfo: PersonalInfo = {

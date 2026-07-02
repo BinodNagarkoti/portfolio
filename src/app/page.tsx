@@ -49,7 +49,7 @@ export default async function Home() {
             <SkillsSection />
             <ExperienceSection />
             <EducationSection />
-            <ProjectsSection personalInfo={personalInfo} />
+            <ProjectsSection/>
             <AchievementsSection />
             <BlogSection />
             <ContactSection personalInfo={personalInfo} />

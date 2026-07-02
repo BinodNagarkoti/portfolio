@@ -5,14 +5,16 @@ import { useState, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import { PlusCircleIcon, Trash2Icon, EditIcon } from "lucide-react";
+import { EditIcon } from "lucide-react";
 import { getEducation, deleteEducation } from '@/lib/actions';
 import type { Education } from '@/lib/supabase-types';
 import { EducationForm } from '@/components/admin/EducationForm';
 import { useToast } from '@/hooks/use-toast';
-import { Skeleton } from '@/components/ui/skeleton';
-import { format, parseISO } from 'date-fns';
+import { AdminPageSkeleton } from '@/components/admin/AdminPageSkeleton';
+import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
+import { AdminDeleteDialog } from '@/components/admin/AdminDeleteDialog';
+import { AdminEmptyState } from '@/components/admin/AdminEmptyState';
+import { formatDateRange } from '@/lib/utils';
 
 export default function EducationAdminPage() {
   const [education, setEducation] = useState<Education[]>([]);
@@ -61,40 +63,16 @@ export default function EducationAdminPage() {
     await fetchEducation();
   };
 
-  const formatDateRange = (start: string, end: string | null | undefined) => {
-    if (!start) return '';
-    const startDate = format(parseISO(start), 'MMM yyyy');
-    const endDate = end ? format(parseISO(end), 'MMM yyyy') : 'Present';
-    return `${startDate} - ${endDate}`;
-  };
-
-  if (isLoading) {
-    return (
-      <div className="space-y-6">
-        <div className="flex justify-between items-center">
-            <Skeleton className="h-10 w-1/4" />
-            <Skeleton className="h-10 w-36" />
-        </div>
-        <div className="space-y-4">
-          {[...Array(2)].map((_, i) => <Card key={i}><CardHeader><Skeleton className="h-6 w-1/2" /></CardHeader><CardContent><Skeleton className="h-4 w-full" /></CardContent></Card>)}
-        </div>
-      </div>
-    )
-  }
+  if (isLoading) return <AdminPageSkeleton />;
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight">Manage Education</h2>
-          <p className="text-muted-foreground">
-            Add, edit, or remove your educational qualifications.
-          </p>
-        </div>
-        <Button onClick={handleAddNew}>
-          <PlusCircleIcon className="mr-2 h-4 w-4" /> Add Education
-        </Button>
-      </div>
+      <AdminPageHeader
+        title="Manage Education"
+        description="Add, edit, or remove your educational qualifications."
+        buttonText="Add Education"
+        onAdd={handleAddNew}
+      />
 
       <div className="space-y-4">
           {education.map((edu) => (
@@ -109,23 +87,10 @@ export default function EducationAdminPage() {
                         <Button variant="outline" size="sm" onClick={() => handleEdit(edu)}>
                             <EditIcon className="mr-2 h-4 w-4" /> Edit
                         </Button>
-                        <AlertDialog>
-                            <AlertDialogTitle asChild>
-                                <Button variant="destructive" size="sm">
-                                <Trash2Icon className="mr-2 h-4 w-4" /> Delete
-                                </Button>
-                            </AlertDialogTitle>
-                            <AlertDialogContent>
-                                <AlertDialogHeader>
-                                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                                    <AlertDialogDescription>This action cannot be undone. This will permanently delete this education record.</AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                    <AlertDialogAction onClick={() => handleDelete(edu.id)}>Continue</AlertDialogAction>
-                                </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialog>
+                        <AdminDeleteDialog
+                          description="This action cannot be undone. This will permanently delete this education record."
+                          onConfirm={() => handleDelete(edu.id)}
+                        />
                     </div>
                 </div>
               </CardHeader>
@@ -141,17 +106,12 @@ export default function EducationAdminPage() {
           ))}
         </div>
 
-      {education.length === 0 && !isLoading && (
-        <Card className="text-center py-12">
-            <CardContent>
-                <h3 className="text-xl font-semibold">No Education Records Found</h3>
-                <p className="text-muted-foreground mt-2">Click "Add Education" to get started.</p>
-            </CardContent>
-        </Card>
-      )}
-
+      <AdminEmptyState
+        message="No Education Records Found"
+        hint='Click "Add Education" to get started.'
+      />
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+        <DialogContent className="sm:max-w-150 max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingEducation ? 'Edit Education' : 'Add New Education'}</DialogTitle>
           </DialogHeader>

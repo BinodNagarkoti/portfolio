@@ -2,6 +2,7 @@ import {
   ADMIN_BLOCKED_TERMS,
   ADMIN_PATH_PREFIXES,
   SITE_URL,
+  SITE_NAME,
 } from '@/lib/seo/config';
 
 const ADMIN_TERM_PATTERN = new RegExp(
@@ -57,4 +58,34 @@ export function truncateForSeo(
   const trimmed = text.trim().replace(/\s+/g, ' ');
   if (trimmed.length <= maxLength) return trimmed;
   return `${trimmed.slice(0, maxLength - suffix.length).trimEnd()}${suffix}`;
+}
+
+export function buildArticleJsonLd(
+  post: {
+    title: string;
+    snippet?: string | null;
+    content: string;
+    published_at?: string | null;
+    updated_at?: string | null;
+    tags?: string[] | null;
+  },
+  canonicalUrl: string,
+) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'TechArticle',
+    headline: post.title,
+    description: post.snippet ?? post.content,
+    author: {
+      '@type': 'Person',
+      name: SITE_NAME,
+    },
+    datePublished: post.published_at,
+    dateModified: post.updated_at,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': canonicalUrl,
+    },
+    keywords: post.tags?.join(', '),
+  };
 }

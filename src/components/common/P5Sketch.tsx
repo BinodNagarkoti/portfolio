@@ -65,8 +65,8 @@ const P5Sketch: React.FC = () => {
           sketchRef.current.removeChild(sketchRef.current.firstChild);
         }
 
-        const s = (p: p5) => {
-          let myShader: p5.Shader;
+        const s = (p: any) => {
+          let myShader: any;
 
           p.preload = () => {
             try {
@@ -151,7 +151,7 @@ const P5Sketch: React.FC = () => {
     };
   }, [applyPrototypeModification]);
 
-  return <div ref={sketchRef} className="w-full h-[300px] md:h-[400px] bg-muted/30" />;
+  return <div ref={sketchRef} className="w-full h-75 md:h-100 bg-muted/30" />;
 };
 
 export default P5Sketch;

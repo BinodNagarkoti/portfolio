@@ -1,19 +1,11 @@
-
 'use client';
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
-import { ImageIcon, SaveIcon } from 'lucide-react';
 import type { Post } from '@/lib/supabase-types';
 import { upsertPost, uploadPostImage } from '@/lib/actions';
 import { useToast } from '@/hooks/use-toast';
 import { type ChangeEvent, useRef, useState } from 'react';
 import remarkGfm from 'remark-gfm';
-// import remarkFootnotes from 'remark-footnotes';
 import remarkDeflist from 'remark-deflist';
 import remarkHeadingId from 'remark-heading-id';
 import remarkSupersub from 'remark-supersub';
@@ -23,6 +15,9 @@ import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import { CustomSelectDate } from '../common/FormItem/CustomSelectDate';
 import MDEditor from '@uiw/react-md-editor';
 import { type TextAreaTextApi, type TextState } from '@uiw/react-md-editor';
+import { ImageIcon } from 'lucide-react';
+import { FormDescription, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { DynamicForm, FormSection } from './DynamicForm';
 
 const formSchema = z.object({
   title: z.string().min(1, 'Title is required'),
@@ -52,43 +47,30 @@ export function PostForm({ post, onSuccess }: PostFormProps) {
     published_at: post?.published_at ? new Date(post.published_at) : undefined,
   };
 
-  const form = useForm<PostFormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues,
-  });
-
   const handleImageCommand = (_state: TextState, api: TextAreaTextApi) => {
-    if (isUploadingImage) {
-      return;
-    }
+    if (isUploadingImage) return;
     editorApiRef.current = api;
     fileInputRef.current?.click();
   };
 
-  const handleImageFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+  const handleImageFileChange = async (event: ChangeEvent<HTMLInputElement>, setContent: (v: string) => void, getContent: () => string) => {
     const file = event.target.files?.[0];
-    if (!file) {
-      return;
-    }
-
+    if (!file) return;
     setIsUploadingImage(true);
     try {
       const formData = new FormData();
       formData.append('image', file);
       const result = await uploadPostImage(formData);
-
       if (result.error || !result.data) {
         toast({ variant: 'destructive', title: 'Image upload failed', description: result.error || 'Unable to upload image.' });
         return;
       }
-
       const imageMarkdown = `![${file.name}](${result.data.publicUrl})`;
       if (editorApiRef.current) {
         const nextState = editorApiRef.current.replaceSelection(imageMarkdown);
-        form.setValue('content', nextState.text, { shouldDirty: true });
+        setContent(nextState.text);
       } else {
-        const currentContent = form.getValues('content') ?? '';
-        form.setValue('content', `${currentContent}\n\n${imageMarkdown}\n`, { shouldDirty: true });
+        setContent(`${getContent()}\n\n${imageMarkdown}\n`);
       }
     } finally {
       setIsUploadingImage(false);
@@ -98,14 +80,7 @@ export function PostForm({ post, onSuccess }: PostFormProps) {
 
   const onSubmit = async (values: PostFormValues) => {
     setIsSaving(true);
-    
-    const dataToSave = {
-        id: post?.id,
-        ...values,
-    };
-
-    const result = await upsertPost(dataToSave);
-
+    const result = await upsertPost({ id: post?.id, ...values });
     if (result.error) {
       toast({ variant: 'destructive', title: 'Error saving post', description: result.error });
     } else {
@@ -115,120 +90,101 @@ export function PostForm({ post, onSuccess }: PostFormProps) {
     setIsSaving(false);
   };
 
-  return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Title</FormLabel>
-              <FormControl><Input placeholder="Your amazing post title" {...field} /></FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        
-        <FormField
-          control={form.control}
-          name="content"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Content</FormLabel>
-              <FormControl>
-                <div className="rounded-md border">
-                  <MDEditor
-                    value={field.value ?? ''}
-                    onChange={(value) => field.onChange(value ?? '')}
-                    preview="live"
-                    height={360}
-                    textareaProps={{
-                      placeholder: 'Write your post content here. Supports Markdown.',
-                      disabled: isUploadingImage,
-                    }}
-                    commandsFilter={(command) => {
-                      if (command.name === 'image') {
-                        return {
-                          ...command,
-                          icon: <ImageIcon size={14} />,
-                          execute: handleImageCommand,
-                        };
-                      }
-                      return command;
-                    }}
-                    previewOptions={{
-                      remarkPlugins: [
-                        remarkGfm,
-                        // remarkFootnotes,
-                        remarkDeflist,
-                        remarkHeadingId,
-                        remarkSupersub,
-                      ],
-                      rehypePlugins: [
-                        rehypeSlug,
-                        [rehypeAutolinkHeadings, { behavior: 'wrap' }],
-                        rehypeHighlight,
-                      ],
-                    }}
+  const formSections: FormSection<PostFormValues>[] = [
+    {
+      rows: [
+        {
+          fields: [
+            { name: 'title', label: 'Title', placeholder: 'Your amazing post title', type: 'text' },
+          ],
+        },
+        {
+          fields: [
+            {
+              name: 'content',
+              type: 'custom',
+              render: ({ field, form }) => (
+                <FormItem>
+                  <FormLabel>Content</FormLabel>
+                  <div className="rounded-md border">
+                    <MDEditor
+                      value={field.value ?? ''}
+                      onChange={(value) => field.onChange(value ?? '')}
+                      preview="live"
+                      height={360}
+                      textareaProps={{
+                        placeholder: 'Write your post content here. Supports Markdown.',
+                        disabled: isUploadingImage,
+                      }}
+                      commandsFilter={(command) => {
+                        if (command.name === 'image') {
+                          return {
+                            ...command,
+                            icon: <ImageIcon size={14} />,
+                            execute: handleImageCommand,
+                          };
+                        }
+                        return command;
+                      }}
+                      previewOptions={{
+                        remarkPlugins: [remarkGfm, remarkDeflist, remarkHeadingId, remarkSupersub],
+                        rehypePlugins: [rehypeSlug, [rehypeAutolinkHeadings, { behavior: 'wrap' }], rehypeHighlight],
+                      }}
+                    />
+                  </div>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) =>
+                      handleImageFileChange(
+                        e,
+                        (v) => form.setValue('content', v, { shouldDirty: true }),
+                        () => form.getValues('content') ?? ''
+                      )
+                    }
                   />
-                </div>
-              </FormControl>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={handleImageFileChange}
-              />
-              <FormDescription>Dont know how to use markdown? Check out <a href="https://www.markdownguide.org/">Markdown Guide</a>.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                  <FormDescription>
+                    Don't know how to use markdown? Check out{' '}
+                    <a href="https://www.markdownguide.org/" className="text-primary underline">Markdown Guide</a>.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              ),
+            },
+          ],
+        },
+        {
+          fields: [
+            {
+              name: 'tags',
+              label: 'Tags',
+              placeholder: 'Tech, JavaScript, AI',
+              type: 'text',
+              description: 'Comma-separated list of tags.',
+            },
+            {
+              name: 'published_at',
+              type: 'custom',
+              render: ({ field }) => (
+                <CustomSelectDate field={field} label="Published Date" disabledPast={false} disabledFuture={true} />
+              ),
+            },
+          ],
+        },
+      ],
+    },
+  ];
 
-        <FormField
-          control={form.control}
-          name="tags"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Tags</FormLabel>
-              <FormControl><Input placeholder="Tech, JavaScript, AI" {...field} value={field.value ?? ''}/></FormControl>
-              <FormDescription>Comma-separated list of tags.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="published_at"
-          render={({ field }) => (
-            <CustomSelectDate disabledPast={false} disabledFuture={true} field={field} label="Published Date" />
-            // <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-            //   <FormControl>
-            //     <Checkbox
-            //       checked={field.value}
-            //       onCheckedChange={field.onChange}
-            //     />
-            //   </FormControl>
-            //   <div className="space-y-1 leading-none">
-            //     <FormLabel>
-            //       Publish Post
-            //     </FormLabel>
-            //     <FormDescription>
-            //       Make this post visible on your public portfolio.
-            //     </FormDescription>
-            //   </div>
-            // </FormItem>
-          )}
-        />
-
-        <Button type="submit" disabled={isSaving}>
-            {isSaving ? <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div> : <SaveIcon className="mr-2 h-4 w-4" />}
-            {isSaving ? 'Saving...' : 'Save Post'}
-        </Button>
-      </form>
-    </Form>
+  return (
+    <DynamicForm
+      schema={formSchema}
+      defaultValues={defaultValues}
+      sections={formSections}
+      onSubmit={onSubmit}
+      submitButtonText="Save Post"
+      isSaving={isSaving}
+    />
   );
 }

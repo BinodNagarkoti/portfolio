@@ -109,7 +109,7 @@ export default function ContactSubmissionsPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[100px]">Status</TableHead>
+                <TableHead className="w-25">Status</TableHead>
                 <TableHead>Sender</TableHead>
                 <TableHead>Email</TableHead>
                 <TableHead>Message (Excerpt)</TableHead>

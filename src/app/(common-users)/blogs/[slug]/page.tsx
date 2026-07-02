@@ -11,7 +11,7 @@ import {
   SITE_NAME,
   SITE_URL,
 } from '@/lib/seo/config';
-import { resolveCanonicalUrl, truncateForSeo } from '@/lib/seo/paths';
+import { resolveCanonicalUrl, truncateForSeo, buildArticleJsonLd } from '@/lib/seo/paths';
 import { ArrowLeftIcon } from 'lucide-react';
 import Link from 'next/link';
 
@@ -73,23 +73,7 @@ export default async function BlogPostPage({ params }: Props) {
 
   const readTime = estimateReadTime(post.content);
   const canonical = `${SITE_URL}/blogs/${post.slug}`;
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'TechArticle',
-    headline: post.title,
-    description: post.snippet ?? post.content,
-    author: {
-      '@type': 'Person',
-      name: SITE_NAME,
-    },
-    datePublished: post.published_at,
-    dateModified: post.updated_at,
-    mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': canonical,
-    },
-    keywords: post.tags?.join(', '),
-  };
+  const jsonLd = buildArticleJsonLd(post, canonical);
 
   return (
     <div className="min-h-screen bg-background">

@@ -1,17 +1,21 @@
+
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import { PlusCircleIcon, Trash2Icon, EditIcon, AwardIcon } from "lucide-react";
+import { PlusCircleIcon, AwardIcon } from "lucide-react";
 import { getAchievements, deleteAchievement } from '@/lib/actions';
 import type { Achievement } from '@/lib/supabase-types';
 import { AchievementForm } from '@/components/admin/AchievementForm';
 import { useToast } from '@/hooks/use-toast';
-import { Skeleton } from '@/components/ui/skeleton';
+import { AdminPageSkeleton } from '@/components/admin/AdminPageSkeleton';
+import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
+import { AdminDeleteDialog } from '@/components/admin/AdminDeleteDialog';
+import { AdminEmptyState } from '@/components/admin/AdminEmptyState';
 import { format, parseISO } from 'date-fns';
+import { EditIcon } from 'lucide-react';
 
 export default function AchievementsAdminPage() {
   const [achievements, setAchievements] = useState<Achievement[]>([]);
@@ -65,33 +69,16 @@ export default function AchievementsAdminPage() {
     return format(parseISO(date), 'PPP');
   };
 
-  if (isLoading) {
-    return (
-      <div className="space-y-6">
-        <div className="flex justify-between items-center">
-            <Skeleton className="h-10 w-1/4" />
-            <Skeleton className="h-10 w-36" />
-        </div>
-        <div className="space-y-4">
-          {[...Array(2)].map((_, i) => <Card key={i}><CardHeader><Skeleton className="h-6 w-1/2" /></CardHeader><CardContent><Skeleton className="h-4 w-full" /></CardContent></Card>)}
-        </div>
-      </div>
-    )
-  }
+  if (isLoading) return <AdminPageSkeleton />;
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight">Manage Achievements</h2>
-          <p className="text-muted-foreground">
-            Add, edit, or remove your notable accomplishments.
-          </p>
-        </div>
-        <Button onClick={handleAddNew}>
-          <PlusCircleIcon className="mr-2 h-4 w-4" /> Add Achievement
-        </Button>
-      </div>
+      <AdminPageHeader
+        title="Manage Achievements"
+        description="Add, edit, or remove your notable accomplishments."
+        buttonText="Add Achievement"
+        onAdd={handleAddNew}
+      />
 
       <div className="space-y-4">
           {achievements.map((ach) => (
@@ -106,23 +93,10 @@ export default function AchievementsAdminPage() {
                         <Button variant="outline" size="sm" onClick={() => handleEdit(ach)}>
                             <EditIcon className="mr-2 h-4 w-4" /> Edit
                         </Button>
-                        <AlertDialog>
-                            <AlertDialogTitle asChild>
-                                <Button variant="destructive" size="sm">
-                                <Trash2Icon className="mr-2 h-4 w-4" /> Delete
-                                </Button>
-                            </AlertDialogTitle>
-                            <AlertDialogContent>
-                                <AlertDialogHeader>
-                                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                                    <AlertDialogDescription>This will permanently delete this achievement record.</AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                    <AlertDialogAction onClick={() => handleDelete(ach.id)}>Continue</AlertDialogAction>
-                                </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialog>
+                        <AdminDeleteDialog
+                          description="This will permanently delete this achievement record."
+                          onConfirm={() => handleDelete(ach.id)}
+                        />
                     </div>
                 </div>
               </CardHeader>
@@ -136,15 +110,11 @@ export default function AchievementsAdminPage() {
         </div>
 
       {achievements.length === 0 && !isLoading && (
-        <Card className="text-center py-12">
-            <CardContent>
-                <div className="flex flex-col items-center gap-4 text-muted-foreground">
-                    <AwardIcon className="h-12 w-12" />
-                    <h3 className="text-xl font-semibold text-foreground">No Achievements Found</h3>
-                    <p>Click "Add Achievement" to showcase your accomplishments.</p>
-                </div>
-            </CardContent>
-        </Card>
+        <AdminEmptyState
+          message="No Achievements Found"
+          hint='Click "Add Achievement" to showcase your accomplishments.'
+          icon={<AwardIcon className="h-12 w-12" />}
+        />
       )}
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>

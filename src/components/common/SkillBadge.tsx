@@ -1,13 +1,14 @@
-import type { Skill } from '@/lib/data';
+import type { Skill } from '@/lib/supabase-types';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import { Code2Icon } from 'lucide-react';
 
 interface SkillBadgeProps {
-  skill: Skill;
+  skill: Skill & { icon?: React.ComponentType<{ className?: string }> };
 }
 
 const SkillBadge = ({ skill }: SkillBadgeProps) => {
-  const IconComponent = skill.icon;
+  const IconComponent = skill.icon || Code2Icon;
   return (
     <Card className="group transform transition-all duration-300 hover:scale-105 hover:shadow-xl bg-card/80 backdrop-blur-xs border-border hover:border-primary">
       <CardContent className="p-4 flex flex-col items-center justify-center text-center aspect-square">
@@ -20,3 +21,4 @@ const SkillBadge = ({ skill }: SkillBadgeProps) => {
 };
 
 export default SkillBadge;
+
